@@ -20,25 +20,26 @@ import java.net.URLEncoder;
 @RequiredArgsConstructor
 @Slf4j
 @CrossOrigin(origins = "*", allowedHeaders = "*")
+@RequestMapping("/auth")
 public class OAuthController {
     private final OAuthService oAuthService;
     private static final Logger logger = LoggerFactory.getLogger(OAuthController.class);
 
 
 
-    @GetMapping("/auth/google")
-    public String socialLoginRequest(HttpServletResponse response) throws IOException {
-        logger.info("시작");
+    @GetMapping("/google")
+    public ResponseEntity<String> socialLoginRequest() throws IOException {
         String requestURL = oAuthService.request();
-        response.sendRedirect(requestURL);
-        logger.info("끝");
-        return response.toString();
+        return ResponseEntity.ok(requestURL);
     }
 
 
-    @GetMapping("/auth/google/redirect")
+
+    @GetMapping("/google/redirect")
     public ResponseEntity<?> callback(
                                       @RequestParam(name = "code") String code) throws JsonProcessingException {
+
+
         GetGoogleOAuthRes getSocialOauthRes =oAuthService.OAuthLogin(code);
         return new ResponseEntity<>(getSocialOauthRes, HttpStatus.OK);
     }

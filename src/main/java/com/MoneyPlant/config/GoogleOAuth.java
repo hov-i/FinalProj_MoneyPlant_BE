@@ -52,6 +52,7 @@ public class GoogleOAuth implements SocialOAuth{
 
         params.put("scope",GOOGLE_DATA_ACCESS_SCOPE);
         params.put("response_type","code");
+        params.put("access_type","offline");
         params.put("client_id",GOOGLE_SNS_CLIENT_ID);
         params.put("redirect_uri",GOOGLE_SNS_CALLBACK_URL);
 
@@ -74,7 +75,6 @@ public class GoogleOAuth implements SocialOAuth{
         params.put("redirect_uri", GOOGLE_SNS_CALLBACK_URL);
         params.put("grant_type", "authorization_code");
         ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity(GOOGLE_TOKEN_REQUEST_URL, params, String.class);
-
         return stringResponseEntity;
     }
 
@@ -86,12 +86,15 @@ public class GoogleOAuth implements SocialOAuth{
 
     @Override
     public ResponseEntity<String> requestUserInfo(GoogleOAuthToken googleOAuthToken) {
-        String GOOGLE_USERINFO_REQUEST_URL= "https://www.googleapis.com/OAuth2/v2/userinfo";
+        String GOOGLE_USERINFO_REQUEST_URL= "https://www.googleapis.com/userinfo/v2/me";
         HttpHeaders headers = new HttpHeaders();
 
         HttpEntity<MultiValueMap<String,String>> request = new HttpEntity<>(headers);
-        headers.add("Authorization","Bearer "+googleOAuthToken.getAccess_token());
+        headers.add("access_token", googleOAuthToken.getAccess_token());
+        System.out.println("restTemplate : " + restTemplate.toString());
+        // 여기가 안됨
         ResponseEntity<String> exchange = restTemplate.exchange(GOOGLE_USERINFO_REQUEST_URL, HttpMethod.GET, request, String.class);
+        System.out.println("exchange : " + exchange);
         System.out.println(exchange.getBody());
         return exchange;
     }

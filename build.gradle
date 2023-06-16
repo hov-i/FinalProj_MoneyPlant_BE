@@ -19,9 +19,6 @@ repositories {
 }
 
 dependencies {
-	// Logging dependencies
-	implementation 'org.slf4j:slf4j-api:1.7.32'
-	implementation 'ch.qos.logback:logback-classic:1.2.6'
 
 	compileOnly 'org.projectlombok:lombok:1.18.20'
 	annotationProcessor 'org.projectlombok:lombok:1.18.20'
@@ -36,7 +33,7 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
 
 	// MySQL
-	implementation 'mysql:mysql-connector-java:8.0.27'
+	implementation 'mysql:mysql-connector-java:8.0.28'
 
 	// Google API client dependencies
 	implementation 'com.google.api-client:google-api-client:1.31.1'

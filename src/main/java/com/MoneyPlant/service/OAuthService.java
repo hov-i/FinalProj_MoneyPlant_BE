@@ -26,11 +26,14 @@ public class OAuthService {
 
     public GetGoogleOAuthRes OAuthLogin(String code) throws JsonProcessingException {
         ResponseEntity<String> accessToken =socialOAuth.requestAccessToken(code);
+
         GoogleOAuthToken googleOAuthToken =socialOAuth.getAccessToken(accessToken);
 
         ResponseEntity<String> userInfoResponse=socialOAuth.requestUserInfo(googleOAuthToken);
+        System.out.println("requestUserInfo 완료");
 
         GoogleUser googleUser =socialOAuth.getUserInfo(userInfoResponse);
+        System.out.println("getUserInfo 완료");
 
         String user_id = googleUser.getEmail();
 
