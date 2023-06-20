@@ -44,7 +44,7 @@ public class GoogleOAuth implements SocialOAuth{
 
 
     // Google API로 요청을 보내고 받을 객체입니다.
-    private final RestTemplate restTemplate;
+//    private final RestTemplate restTemplate;
 
     @Override
     public String getOAuthRedirectURL() {
@@ -67,7 +67,8 @@ public class GoogleOAuth implements SocialOAuth{
     @Override
     public ResponseEntity<String> requestAccessToken(String code) {
         String GOOGLE_TOKEN_REQUEST_URL = "https://OAuth2.googleapis.com/token";
-        RestTemplate restTemplate=new RestTemplate();
+        RestTemplate restTemplate = new RestTemplate();
+        System.out.println("첫 restTemplate : " + restTemplate.toString());
         Map<String, Object> params = new HashMap<>();
         params.put("code", code);
         params.put("client_id", GOOGLE_SNS_CLIENT_ID);
@@ -75,6 +76,7 @@ public class GoogleOAuth implements SocialOAuth{
         params.put("redirect_uri", GOOGLE_SNS_CALLBACK_URL);
         params.put("grant_type", "authorization_code");
         ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity(GOOGLE_TOKEN_REQUEST_URL, params, String.class);
+        System.out.println("requestAccessToken의 restTemplat : " + restTemplate.toString());
         return stringResponseEntity;
     }
 
@@ -87,11 +89,17 @@ public class GoogleOAuth implements SocialOAuth{
     @Override
     public ResponseEntity<String> requestUserInfo(GoogleOAuthToken googleOAuthToken) {
         String GOOGLE_USERINFO_REQUEST_URL= "https://www.googleapis.com/userinfo/v2/me";
+
+        RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
 
+        // bearer 이슈가 있었습니다.
+        // postman 에서 안찍어도 넘어오길래 restTemplate 도 그냥 헤더로 넘겼더니 401에러가 발생하네요
+        // HttpEntity를 선언하기 전에 setBearerAuth를 통해 Bearer 설정을 해줍시다.
+        // 아니면 HttpEntity 선언 후 헤더에 토큰 값을 넣을 때 앞에 Bearer를 추가해서 넣으셔도 됩니다.
+        headers.setBearerAuth(googleOAuthToken.getAccess_token());
         HttpEntity<MultiValueMap<String,String>> request = new HttpEntity<>(headers);
         headers.add("access_token", googleOAuthToken.getAccess_token());
-        System.out.println("restTemplate : " + restTemplate.toString());
         // 여기가 안됨
         ResponseEntity<String> exchange = restTemplate.exchange(GOOGLE_USERINFO_REQUEST_URL, HttpMethod.GET, request, String.class);
         System.out.println("exchange : " + exchange);
