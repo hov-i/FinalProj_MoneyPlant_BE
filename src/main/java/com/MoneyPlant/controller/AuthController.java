@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600, allowCredentials = "true")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 //@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("api/auth")
@@ -100,7 +100,8 @@ public class AuthController {
         }
 
         // User 객체 user 생성 (password 는 Bcryp 암호화 적용)
-        User user = new User(signUpRequest.getEmail(),
+        User user = new User(signUpRequest.getName(),
+                signUpRequest.getEmail(),
                 encoder.encode(signUpRequest.getPassword()));
 
         String requestRole = signUpRequest.getRole();
@@ -113,6 +114,7 @@ public class AuthController {
             role = userRole;
         } else {    // 값이 있다면 해당 값을 Role 객체로 바꾸어 설정
             if (requestRole.equals("admin")) {
+                System.out.println("admin으로 적용");
                 Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
                         .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                 role = adminRole;

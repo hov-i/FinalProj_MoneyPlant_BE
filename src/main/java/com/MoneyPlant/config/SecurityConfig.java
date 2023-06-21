@@ -30,10 +30,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthTokenFilter authenticationJwtTokenFilter() {
         return new AuthTokenFilter();
     }
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -43,11 +45,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/auth/google", "/auth/google/redirect").permitAll() // Allow access to /auth/google without authentication
-                .anyRequest().authenticated() // Require authentication for all other requests
+                .antMatchers("/auth/google", "/auth/google/redirect","/api/auth/signup").permitAll()
+                .anyRequest().authenticated()
                 .and()
-                .csrf().disable(); // Disable CSRF protection for simplicity (you may need to enable it in your production environment)
+                .csrf().disable();
     }
-
-
 }
