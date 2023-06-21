@@ -4,13 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-@AllArgsConstructor
+
 @Getter
+@AllArgsConstructor
 @Setter
-public class UserDto {
+public class UserInfoResponse {
     private Long id;
-    private String email;
-    private String password;
     private String name;
+    private String email;
+    private String role;
 
 }

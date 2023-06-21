@@ -29,13 +29,16 @@ public class User {
     @Column(nullable = true)
     private String password;
 
-    @Column(nullable = true)
+    @Column(name = "social_provider", nullable = true)
     private String socialProvider;      // 소셜 종류 ex) google, kakao
 
-    @Column(nullable = true)
+    @Column(name = "social_id", nullable = true)
     private String socialId;            // 소셜 아이디 ex) gmail
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Budget> budgets = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id")
+    private Role role;
+
 }
 
