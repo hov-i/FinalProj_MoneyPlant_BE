@@ -6,8 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table (name = "users")
@@ -17,7 +15,7 @@ import java.util.List;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -35,10 +33,12 @@ public class User {
     @Column(name = "social_id", nullable = true)
     private String socialId;            // 소셜 아이디 ex) gmail
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
     private Role role;
 
+    public User(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 }
-
