@@ -1,5 +1,6 @@
 package com.MoneyPlant.entity;
 
+import com.MoneyPlant.constant.ERole;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

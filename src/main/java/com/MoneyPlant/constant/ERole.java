@@ -1,4 +1,4 @@
-package com.MoneyPlant.entity;
+package com.MoneyPlant.constant;
 
 
 public enum ERole {

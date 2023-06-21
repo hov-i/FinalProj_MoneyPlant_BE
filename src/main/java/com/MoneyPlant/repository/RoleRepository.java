@@ -2,7 +2,8 @@ package com.MoneyPlant.repository;
 
 import java.util.Optional;
 
-import com.MoneyPlant.entity.ERole;
+
+import com.MoneyPlant.constant.ERole;
 import com.MoneyPlant.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
