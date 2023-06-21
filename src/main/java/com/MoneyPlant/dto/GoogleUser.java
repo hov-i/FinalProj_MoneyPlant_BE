@@ -9,12 +9,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class GoogleUser {
-    public String id;
-    public String email;
-    public Boolean verifiedEmail;
-    public String name;
-    public String givenName;
-    public String familyName;
-    public String picture;
-    public String locale;
+    private String id;
+    private String email;
+    private Boolean verifiedEmail;
+    private String name;
+    private String givenName;
+    private String familyName;
+    private String picture;
+    private String locale;
 }
