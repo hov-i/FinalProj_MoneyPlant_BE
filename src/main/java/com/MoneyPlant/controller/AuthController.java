@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600, allowCredentials = "true")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 //@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("api/auth")
@@ -62,7 +62,6 @@ public class AuthController {
     // @Valid : 유효성 체크
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-
         // login request : email, password 로 구성됨
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
@@ -100,7 +99,8 @@ public class AuthController {
         }
 
         // User 객체 user 생성 (password 는 Bcryp 암호화 적용)
-        User user = new User(signUpRequest.getEmail(),
+        User user = new User(signUpRequest.getName(),
+                signUpRequest.getEmail(),
                 encoder.encode(signUpRequest.getPassword()));
 
         String requestRole = signUpRequest.getRole();
@@ -113,6 +113,7 @@ public class AuthController {
             role = userRole;
         } else {    // 값이 있다면 해당 값을 Role 객체로 바꾸어 설정
             if (requestRole.equals("admin")) {
+                System.out.println("admin으로 적용");
                 Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
                         .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                 role = adminRole;
@@ -133,12 +134,19 @@ public class AuthController {
     // 로그아웃
     @PostMapping("/signout")
     public ResponseEntity<?> logoutUser() {
+        // SecurityContextHolder 로 현재 세션의 사용자 정보를 가져옴
+        // getPrincipal()을 사용하면 UserDetails를 구현한 객체를 반환함
+        // 우리의 경우 UserDetailsImpl 가 그 객체이고 그렇기 때문에 Object로 생성했지만 형변환이 가능한 모습
         Object principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        // 사용자 인증이 되지 않은 사람을 = "anonymousUser" 로 표현함
+        // 인증이 되어있다면 userId값을 세션에서 가져와서 해당하는 refreshtoken을 DB에서 삭제함
         if (principle.toString() != "anonymousUser") {
             Long userId = ((UserDetailsImpl) principle).getId();
             refreshTokenService.deleteByUserId(userId);
         }
 
+        // cookie의 token값들을 지워버림
         ResponseCookie jwtCookie = jwtUtils.getCleanJwtCookie();
         ResponseCookie jwtRefreshCookie = jwtUtils.getCleanJwtRefreshCookie();
 
