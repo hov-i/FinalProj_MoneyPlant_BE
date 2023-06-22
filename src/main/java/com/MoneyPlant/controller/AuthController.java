@@ -5,10 +5,13 @@ import com.MoneyPlant.constant.ERole;
 import com.MoneyPlant.dto.LoginRequest;
 import com.MoneyPlant.dto.MessageResponse;
 import com.MoneyPlant.dto.SignupRequest;
+import com.MoneyPlant.entity.Budget;
 import com.MoneyPlant.entity.RefreshToken;
 import com.MoneyPlant.entity.Role;
+import com.MoneyPlant.repository.BudgetRepository;
 import com.MoneyPlant.security.exception.TokenRefreshException;
 import com.MoneyPlant.security.jwt.JwtUtils;
+import com.MoneyPlant.service.BudgetService;
 import com.MoneyPlant.service.jwt.RefreshTokenService;
 import com.MoneyPlant.service.jwt.UserDetailsImpl;
 
@@ -32,6 +35,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -48,6 +53,8 @@ public class AuthController {
 
     @Autowired
     RoleRepository roleRepository;
+    @Autowired
+    private BudgetService budgetService;
 
     @Autowired
     PasswordEncoder encoder;
@@ -123,15 +130,22 @@ public class AuthController {
                 role = userRole;
             }
         }
-
         user.setRole(role);
         userRepository.save(user);
 
+        System.out.println(requestRole);
+        // 나의 예산 생성
+        if (!(requestRole.equals("admin"))) {
+            Long userId = userRepository.findUserIdByEmail(signUpRequest.getEmail());
+            budgetService.createBudgetForAllCategories(userId);
+            System.out.println("데이터 성공");
+        } else {
+            System.out.println("실패");
+        }
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
 
-
-    // 로그아웃
+        // 로그아웃
     @PostMapping("/signout")
     public ResponseEntity<?> logoutUser() {
         // SecurityContextHolder 로 현재 세션의 사용자 정보를 가져옴

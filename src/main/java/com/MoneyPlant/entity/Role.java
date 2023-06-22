@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "roles")
@@ -25,5 +26,7 @@ public class Role {
     public Role(ERole name) {
         this.name = name;
     }
+
+
 
 }
