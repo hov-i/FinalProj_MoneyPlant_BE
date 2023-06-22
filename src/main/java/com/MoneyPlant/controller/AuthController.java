@@ -24,6 +24,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import com.MoneyPlant.dto.UserInfoResponse;
@@ -134,14 +135,6 @@ public class AuthController {
         userRepository.save(user);
 
         System.out.println(requestRole);
-        // 나의 예산 생성
-        if (!(requestRole.equals("admin"))) {
-            Long userId = userRepository.findUserIdByEmail(signUpRequest.getEmail());
-            budgetService.createBudgetForAllCategories(userId);
-            System.out.println("데이터 성공");
-        } else {
-            System.out.println("실패");
-        }
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
 

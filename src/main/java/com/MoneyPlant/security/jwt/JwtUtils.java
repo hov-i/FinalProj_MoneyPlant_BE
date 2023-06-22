@@ -45,7 +45,7 @@ public class JwtUtils {
 //     jwt 쿠키 (UserDetailsImpl버전) (보안 측면에서 구현)
     public ResponseCookie generateJwtCookie(UserDetailsImpl userPrincipal) {
         String jwt = generateTokenFromEmail(userPrincipal.getUsername());
-        return generateCookie(jwtCookie, jwt, "/api");
+        return generateCookie(jwtCookie, jwt, "/");
     }
 
     /**
@@ -55,7 +55,7 @@ public class JwtUtils {
      */
     public ResponseCookie generateJwtCookie(User user) {
         String jwt = generateTokenFromEmail(user.getEmail());
-        return generateCookie(jwtCookie, jwt, "/api");
+        return generateCookie(jwtCookie, jwt, "/");
     }
 
     /**
@@ -90,7 +90,7 @@ public class JwtUtils {
      * @return
      */
     public ResponseCookie getCleanJwtCookie() {
-        ResponseCookie cookie = ResponseCookie.from(jwtCookie, null).path("/api").build();
+        ResponseCookie cookie = ResponseCookie.from(jwtCookie, null).path("/").build();
         return cookie;
     }
 

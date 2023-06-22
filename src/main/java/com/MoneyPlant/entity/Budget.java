@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name="budget")
@@ -19,7 +20,7 @@ public class Budget {
 
     @ManyToOne
     @JoinColumn(name = "id")
-    private User user;
+    private User user; // userId
 
     @ManyToOne
     @JoinColumn(name = "category_id")
@@ -27,5 +28,8 @@ public class Budget {
 
     @Column(name = "budget_money", nullable = false)
     private int budgetMoney; //예산 돈
+
+    @Column(name = "budget_month", nullable = false)
+    private Date budgetMonth; // 예산 달
 
 }
