@@ -27,6 +27,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
 
+    // FilterChain : Filter는 클라이언트 요청부터 응답 받을 때까지 거쳐가는 작업들임 FilterChain은 그런 작업들을 모아서 체인처럼 해놓은것
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
