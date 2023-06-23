@@ -25,10 +25,10 @@ public class Schedule { // 약어로 sc를 사용합니다.
     private String calId; // 구글 캘린더 ID
 
     @Column(name = "sc_name", nullable = false)
-    private String workName; // 일정 이름
+    private String scName; // 일정 이름
 
     @Column(name = "sc_date", nullable = false)
-    private String payType; // 일정 날짜
+    private String scDate; // 일정 날짜
 
     @Column(name = "sc_budget")
     private String scBudget; // 일정 예산
