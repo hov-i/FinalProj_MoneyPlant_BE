@@ -45,7 +45,7 @@ public class JwtUtils {
 //     jwt 쿠키 (UserDetailsImpl버전) (보안 측면에서 구현)
     public ResponseCookie generateJwtCookie(UserDetailsImpl userPrincipal) {
         String jwt = generateTokenFromEmail(userPrincipal.getUsername());
-        return generateCookie(jwtCookie, jwt, "/");
+        return generateCookie(jwtCookie, jwt, "/", false, "None");
     }
 
     /**
@@ -55,7 +55,7 @@ public class JwtUtils {
      */
     public ResponseCookie generateJwtCookie(User user) {
         String jwt = generateTokenFromEmail(user.getEmail());
-        return generateCookie(jwtCookie, jwt, "/");
+        return generateCookie(jwtCookie, jwt, "/", false, "None");
     }
 
     /**
@@ -63,8 +63,9 @@ public class JwtUtils {
      * @param refreshToken
      * @return
      */
+
     public ResponseCookie generateRefreshJwtCookie(String refreshToken) {
-        return generateCookie(jwtRefreshCookie, refreshToken, "/api/auth/refreshtoken");
+        return generateCookie(jwtRefreshCookie, refreshToken, "/api/auth/refreshtoken", false, "None");
     }
 
     /**
@@ -160,10 +161,18 @@ public class JwtUtils {
      * @return ResponseCookie
      * ResponseCookie는 쿠키
      */
-    private ResponseCookie generateCookie(String name, String value, String path) {
-        ResponseCookie cookie = ResponseCookie.from(name, value).path(path).maxAge(24 * 60 * 60).httpOnly(true).build();
+
+    private ResponseCookie generateCookie(String name, String value, String path, boolean secure, String sameSite) {
+        ResponseCookie cookie = ResponseCookie.from(name, value)
+                .path(path)
+                .maxAge(24 * 60 * 60)
+                .httpOnly(true)
+                .secure(secure)
+                .sameSite(sameSite)
+                .build();
         return cookie;
     }
+
 
     /**
      * cookie의 name으로 value 값을 읽습니다.

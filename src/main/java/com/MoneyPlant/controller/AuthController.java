@@ -1,14 +1,11 @@
 package com.MoneyPlant.controller;
 
-
 import com.MoneyPlant.constant.ERole;
 import com.MoneyPlant.dto.LoginRequest;
 import com.MoneyPlant.dto.MessageResponse;
 import com.MoneyPlant.dto.SignupRequest;
-import com.MoneyPlant.entity.Budget;
 import com.MoneyPlant.entity.RefreshToken;
 import com.MoneyPlant.entity.Role;
-import com.MoneyPlant.repository.BudgetRepository;
 import com.MoneyPlant.security.exception.TokenRefreshException;
 import com.MoneyPlant.security.jwt.JwtUtils;
 import com.MoneyPlant.service.BudgetService;
@@ -24,7 +21,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import com.MoneyPlant.dto.UserInfoResponse;
@@ -34,14 +30,9 @@ import com.MoneyPlant.entity.User;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*")
 //@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("api/auth")
@@ -112,7 +103,7 @@ public class AuthController {
                 encoder.encode(signUpRequest.getPassword()));
 
         String requestRole = signUpRequest.getRole();
-        Role role = new Role();
+        Role role;
 
         // user 에 role 부여
         if (requestRole == null) { // role값이 null로 들어왔다면 기본 값으로 USER_ROLE로 설정
@@ -148,7 +139,7 @@ public class AuthController {
 
         // 사용자 인증이 되지 않은 사람을 = "anonymousUser" 로 표현함
         // 인증이 되어있다면 userId값을 세션에서 가져와서 해당하는 refreshtoken을 DB에서 삭제함
-        if (principle.toString() != "anonymousUser") {
+        if (principle.toString().equals( "anonymousUser")) {
             Long userId = ((UserDetailsImpl) principle).getId();
             refreshTokenService.deleteByUserId(userId);
         }
