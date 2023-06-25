@@ -32,7 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 
-@CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*")
+@CrossOrigin(origins = "https://localhost:3000", allowedHeaders = "*")
 //@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("api/auth")
@@ -70,6 +70,7 @@ public class AuthController {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
         ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
+
 
         String role = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
