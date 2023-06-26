@@ -18,6 +18,10 @@ public class List {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long listId;
 
+    @ManyToOne
+    @JoinColumn(name = "id")
+    private User id;
+
     @Column
     private String content;
 

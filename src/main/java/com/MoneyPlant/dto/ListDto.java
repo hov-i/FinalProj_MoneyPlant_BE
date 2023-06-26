@@ -10,4 +10,5 @@ public class ListDto {
     private String content;
     private int amount;
     private String date;
+    private Long id;
 }
