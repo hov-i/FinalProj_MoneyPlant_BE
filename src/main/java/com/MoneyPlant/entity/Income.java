@@ -13,11 +13,15 @@ import javax.persistence.*;
 public class Income {
     @Id
     @Column(name = "income_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long incomeId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long incomeId; // 수입 Id
 
-    @Column
-    private int income;
+    @ManyToOne
+    @JoinColumn(name = "id")
+    private User id;
+
+    @Column(name = "income_amount")
+    private int incomeAmount;
 
     @Column(name = "income_date")
     private String incomeDate;
@@ -25,4 +29,5 @@ public class Income {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
+
 }

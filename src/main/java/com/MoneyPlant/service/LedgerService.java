@@ -1,134 +1,109 @@
 package com.MoneyPlant.service;
 
-import com.MoneyPlant.dto.ExpenseDto;
-import com.MoneyPlant.dto.IncomeDto;
 import com.MoneyPlant.entity.Expense;
 import com.MoneyPlant.entity.Income;
+import com.MoneyPlant.entity.User;
 import com.MoneyPlant.repository.ExpenseRepository;
 import com.MoneyPlant.repository.IncomeRepository;
-import org.springframework.data.crossstore.ChangeSetPersister;
+import com.MoneyPlant.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@Transactional
+@Slf4j
+@RequiredArgsConstructor
 public class LedgerService {
 
     private final IncomeRepository incomeRepository;
     private final ExpenseRepository expenseRepository;
-
-    public LedgerService(IncomeRepository incomeRepository, ExpenseRepository expenseRepository) {
-        this.incomeRepository = incomeRepository;
-        this.expenseRepository = expenseRepository;
-    }
-
-
-
+    private final UserRepository userRepository;
 
     // 수입, 지출 추가
-    public IncomeDto createIncome(IncomeDto incomeDto) {
-        // IncomeDto 를 Income entity 로 변환
+    public boolean createIncome(int incomeAmount, String incomeDate, Long id) {
         Income income = new Income();
-        income.setIncome(incomeDto.getIncome());
-        income.setIncomeDate(incomeDto.getIncomeDate());
+        income.setIncomeAmount(incomeAmount);
+        income.setIncomeDate(incomeDate);
 
-        // Income entity 를 저장
-        Income savedIncome = incomeRepository.save(income);
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid id"));
+        income.setId(user);
 
-        // 저장된 Income entity 를 IncomeDto 로 변환하여 반환
-        return mapIncomeToDto(savedIncome);
+        Income saveItem = incomeRepository.save(income);
+        log.info("수입 : " + saveItem.getIncomeAmount());
+        return true;
     }
 
-    public ExpenseDto createExpense(ExpenseDto expenseDto) {
-        // ExpenseDto 를 Expense entity 로 변환
+    public boolean createExpense(int expenseAmount, String expenseDate, Long id) {
         Expense expense = new Expense();
-        expense.setExpense(expenseDto.getExpense());
-        expense.setExpenseDate(expenseDto.getExpenseDate());
+        expense.setExpenseAmount(expenseAmount);
+        expense.setExpenseDate(expenseDate);
 
-        // Expense entity 를 저장
-        Expense savedExpense = expenseRepository.save(expense);
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid id"));
+        expense.setId(user);
 
-        // 저장된 Expense entity 를 ExpenseDto 로 변환하여 반환
-        return mapExpenseToDto(savedExpense);
+        Expense saveItem = expenseRepository.save(expense);
+        log.info("지출 : " + saveItem.getExpenseAmount());
+        return true;
     }
 
-    private IncomeDto mapIncomeToDto(Income income) {
-        IncomeDto incomeDto = new IncomeDto();
-        incomeDto.setIncomeId(income.getIncomeId());
-        incomeDto.setIncome(income.getIncome());
-        incomeDto.setIncomeDate(income.getIncomeDate());
-        return incomeDto;
-    }
-
-    private ExpenseDto mapExpenseToDto(Expense expense) {
-        ExpenseDto expenseDto = new ExpenseDto();
-        expenseDto.setExpenseId(expense.getExpenseId());
-        expenseDto.setExpense(expense.getExpense());
-        expenseDto.setExpenseDate(expense.getExpenseDate());
-        return expenseDto;
-    }
 
 
     // 수입, 지출 수정
-    public IncomeDto updateIncome(Long incomeId, IncomeDto incomeDto) throws ChangeSetPersister.NotFoundException {
-        // 수입 entity 조회
-        Income income = incomeRepository.findById(incomeId)
-                .orElseThrow(() -> new ChangeSetPersister.NotFoundException());
-
-        // 수입 정보 수정
-        income.setIncome(incomeDto.getIncome());
-        income.setIncomeDate(incomeDto.getIncomeDate());
-
-        // 수정된 수입 entity 저장
-        Income updatedIncome = incomeRepository.save(income);
-
-        // 수정된 수입 entity IncomeDto 로 변환하여 반환
-        return mapIncomeToDto(updatedIncome);
+    // 수입 수정
+    public boolean updateIncome(long incomeId, int newIncomeAmount, String newIncomeDate) {
+        Optional<Income> optionalIncome = incomeRepository.findById(incomeId);
+        if (optionalIncome.isPresent()) {
+            Income income = optionalIncome.get();
+            income.setIncomeAmount(newIncomeAmount);
+            income.setIncomeDate(newIncomeDate);
+            incomeRepository.save(income);
+            return true;
+        }
+        return false;
     }
 
-    public ExpenseDto updateExpense(Long expenseId, ExpenseDto expenseDto) throws ChangeSetPersister.NotFoundException {
-        // 지출 entity 조회
-        Expense expense = expenseRepository.findById(expenseId)
-                .orElseThrow(() -> new ChangeSetPersister.NotFoundException());
-
-        // 지출 정보 수정
-        expense.setExpense(expenseDto.getExpense());
-        expense.setExpenseDate(expenseDto.getExpenseDate());
-
-        // 수정된 지출 entity 저장
-        Expense updatedExpense = expenseRepository.save(expense);
-
-        // 수정된 지출 entity ExpenseDto 로 변환하여 반환
-        return mapExpenseToDto(updatedExpense);
+    // 지출 수정
+    public boolean updateExpense(long expenseId, int newExpenseAmount, String newExpenseDate) {
+        Optional<Expense> optionalExpense = expenseRepository.findById(expenseId);
+        if (optionalExpense.isPresent()) {
+            Expense expense = optionalExpense.get();
+            expense.setExpenseAmount(newExpenseAmount);
+            expense.setExpenseDate(newExpenseDate);
+            expenseRepository.save(expense);
+            return true;
+        }
+        return false;
     }
 
 
     // 수입, 지출 삭제
-//    public IncomeDto deleteIncome(IncomeDto incomeDto){
-//
-//    }
 
 
     // 합계
-    public List<Income> getAllIncomes() {
-        return incomeRepository.findAll();
-    }
-
-    public List<Expense> getAllExpenses() {
-        return expenseRepository.findAll();
-    }
-
+    // 수입, 지출 합계
     public int calculateTotalIncome() {
         List<Income> incomes = incomeRepository.findAll();
-        return incomes.stream()
-                .mapToInt(Income::getIncome)
-                .sum();
+        int totalIncome = 0;
+        for (Income income : incomes) {
+            totalIncome += income.getIncomeAmount();
+        }
+        return totalIncome;
     }
 
     public int calculateTotalExpense() {
         List<Expense> expenses = expenseRepository.findAll();
-        return expenses.stream()
-                .mapToInt(Expense::getExpense)
-                .sum();
+        int totalExpense = 0;
+        for (Expense expense : expenses) {
+            totalExpense += expense.getExpenseAmount();
+        }
+        return totalExpense;
     }
 }
+

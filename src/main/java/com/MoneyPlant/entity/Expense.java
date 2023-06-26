@@ -13,11 +13,15 @@ import javax.persistence.*;
 public class Expense {
     @Id
     @Column(name = "expense_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long expenseId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long ExpenseId; // 지출 Id
 
-    @Column
-    private int expense;
+    @ManyToOne
+    @JoinColumn(name = "id")
+    private User id;
+
+    @Column(name= "expense_amount")
+    private int expenseAmount;
 
     @Column(name = "expense_date")
     private String expenseDate;
