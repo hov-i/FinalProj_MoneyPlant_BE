@@ -1,11 +1,9 @@
 package com.MoneyPlant.entity;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name="budget")
@@ -18,11 +16,11 @@ public class Budget {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long budgetId; // 예산 Id
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
     private User user; // userId
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category; //카테고리 Id
 
@@ -30,6 +28,6 @@ public class Budget {
     private int budgetMoney; //예산 돈
 
     @Column(name = "budget_month", nullable = false)
-    private Date budgetMonth; // 예산 달
+    private LocalDateTime budgetMonth; // 예산 달
 
 }

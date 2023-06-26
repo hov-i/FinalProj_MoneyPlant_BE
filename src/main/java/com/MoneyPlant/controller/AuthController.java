@@ -5,13 +5,10 @@ import com.MoneyPlant.constant.ERole;
 import com.MoneyPlant.dto.LoginRequest;
 import com.MoneyPlant.dto.MessageResponse;
 import com.MoneyPlant.dto.SignupRequest;
-import com.MoneyPlant.entity.Budget;
 import com.MoneyPlant.entity.RefreshToken;
 import com.MoneyPlant.entity.Role;
-import com.MoneyPlant.repository.BudgetRepository;
 import com.MoneyPlant.security.exception.TokenRefreshException;
 import com.MoneyPlant.security.jwt.JwtUtils;
-import com.MoneyPlant.service.BudgetService;
 import com.MoneyPlant.service.jwt.RefreshTokenService;
 import com.MoneyPlant.service.jwt.UserDetailsImpl;
 
@@ -54,8 +51,6 @@ public class AuthController {
 
     @Autowired
     RoleRepository roleRepository;
-    @Autowired
-    private BudgetService budgetService;
 
     @Autowired
     PasswordEncoder encoder;

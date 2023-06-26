@@ -1,21 +1,23 @@
-package com.MoneyPlant.dto;
+    package com.MoneyPlant.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+    import lombok.AllArgsConstructor;
+    import lombok.Getter;
+    import lombok.NoArgsConstructor;
+    import lombok.Setter;
 
-import java.util.Date;
+    import java.time.LocalDateTime;
+    import java.time.LocalTime;
+    import java.util.Date;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class BudgetDto {
-    private int budgetMoney;
-    private Date budgetMonth;
-    private int categoryId;
-    private Long userId;
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public class BudgetDto {
+        private int budgetMoney;
+        private LocalDateTime budgetMonth;
+        private int categoryId;
+        private Long userId;
+        private String categoryName;
 
-
-}
+    }
