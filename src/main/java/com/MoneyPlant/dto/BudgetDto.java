@@ -16,7 +16,7 @@
     public class BudgetDto {
         private int budgetMoney;
         private LocalDateTime budgetMonth;
-        private int categoryId;
+        private Long categoryId;
         private Long userId;
         private String categoryName;
 

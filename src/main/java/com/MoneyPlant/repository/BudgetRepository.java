@@ -18,11 +18,6 @@ import java.util.List;
 @Repository
 public interface BudgetRepository extends JpaRepository<Budget, Long> {
     Budget findByUserAndCategory(User user, Category category);
-
-    //@Query(value = "SELECT * FROM Budget WHERE user_id = :userId", nativeQuery = true)
-    @Query("SELECT new com.MoneyPlant.dto.BudgetDto(b.user) " +
-            "FROM Budget b " +
-            "WHERE b.user = :userId")
-    List<BudgetDto> findBudgetWithCategoryName(@Param("userId") Long userId);
+    List<Budget> findByUserId(Long userId);
 }
 

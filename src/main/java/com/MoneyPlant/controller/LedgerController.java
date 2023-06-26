@@ -3,12 +3,10 @@ package com.MoneyPlant.controller;
 import com.MoneyPlant.dto.ExpenseDto;
 import com.MoneyPlant.dto.IncomeDto;
 import com.MoneyPlant.service.LedgerService;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -36,6 +34,19 @@ public class LedgerController {
             return ResponseEntity.status(HttpStatus.CREATED).body(createdExpense);
         }
 
+
+        // 수입, 지출 수정
+        @PutMapping("/income/{incomeId}")
+        public ResponseEntity<IncomeDto> updateIncome(@PathVariable Long incomeId, @RequestBody IncomeDto incomeDto) throws ChangeSetPersister.NotFoundException {
+            IncomeDto updatedIncome = ledgerService.updateIncome(incomeId, incomeDto);
+            return ResponseEntity.ok(updatedIncome);
+        }
+
+    @PutMapping("/expense/{expenseId}")
+    public ResponseEntity<ExpenseDto> updateExpense(@PathVariable Long expenseId, @RequestBody ExpenseDto expenseDto) throws ChangeSetPersister.NotFoundException {
+        ExpenseDto updatedExpense = ledgerService.updateExpense(expenseId, expenseDto);
+        return ResponseEntity.ok(updatedExpense);
+    }
 
     // 합계
     @PostMapping("/total")

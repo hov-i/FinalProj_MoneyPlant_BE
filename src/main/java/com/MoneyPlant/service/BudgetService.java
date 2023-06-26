@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.sql.RowSet;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -70,7 +71,23 @@ public class BudgetService {
     // 나의 예산 조회
     public List<BudgetDto> getBudgetWithCategoryNames(UserDetailsImpl userDetails) {
         Long userId = userDetails.getId();
-        List<BudgetDto> budgetList = budgetRepository.findBudgetWithCategoryName(userId);
-        return budgetList;
+        List<Budget> budgetList = budgetRepository.findByUserId(userId);
+
+
+        List<BudgetDto> budgetDtoList = new ArrayList<>();
+        for (Budget budget : budgetList) {
+
+            BudgetDto budgetDto = new BudgetDto();
+            budgetDto.setBudgetMoney(budget.getBudgetMoney());
+            budgetDto.setBudgetMonth(budget.getBudgetMonth());
+            budgetDto.setCategoryId(budget.getCategory().getCategoryId());
+            budgetDto.setUserId(budget.getUser().getId());
+            String categoryName = categoryRepository.findByCategoryId(budget.getCategory().getCategoryId()).getCategoryName();
+            budgetDto.setCategoryName(categoryName);
+
+            budgetDtoList.add(budgetDto);
+        }
+
+        return budgetDtoList;
     }
 }

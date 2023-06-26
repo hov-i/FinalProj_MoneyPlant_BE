@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @ToString
 public class Budget {
     @Id
-    @Column(name = "budget_id")
+    @Column
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long budgetId; // 예산 Id
 
@@ -21,13 +21,13 @@ public class Budget {
     private User user; // userId
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "categoryId")
     private Category category; //카테고리 Id
 
-    @Column(name = "budget_money", nullable = false)
+    @Column(nullable = false)
     private int budgetMoney; //예산 돈
 
-    @Column(name = "budget_month", nullable = false)
+    @Column(nullable = false)
     private LocalDateTime budgetMonth; // 예산 달
 
 }
