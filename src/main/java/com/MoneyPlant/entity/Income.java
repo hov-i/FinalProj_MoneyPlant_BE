@@ -16,9 +16,9 @@ public class Income {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long incomeId; // 수입 Id
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
-    private User id;
+    private User user;
 
     @Column(name = "income_amount")
     private int incomeAmount;
@@ -29,5 +29,4 @@ public class Income {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
-
 }

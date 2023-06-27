@@ -17,7 +17,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(origins = "https://localhost:3000", allowedHeaders = "*")
 @RequestMapping("/list")
 public class ListController {
 

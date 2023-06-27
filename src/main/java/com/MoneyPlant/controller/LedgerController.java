@@ -1,76 +1,108 @@
 package com.MoneyPlant.controller;
 
+import com.MoneyPlant.dto.ExpenseDto;
+import com.MoneyPlant.dto.IncomeDto;
 import com.MoneyPlant.service.LedgerService;
+import com.MoneyPlant.service.jwt.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @Slf4j
 @CrossOrigin(origins = "https://localhost:3000", allowedHeaders = "*")
-@RequestMapping("/api/ledger")
+@RequestMapping("/ledger")
 public class LedgerController {
 
+    @Autowired
     private final LedgerService ledgerService;
 
-    // 내역 저장
+    //등록
+    // 수입 등록
     @PostMapping("/income")
-    public ResponseEntity<Boolean> incomeCreate(@RequestBody Map<String, Object> data) {
-        int incomeAmount = (Integer) data.get("incomeAmount");
-        String incomeDate = (String) data.get("incomeDate");
-        Long userId = (Long) data.get("userId");
-        boolean result = ledgerService.createIncome(incomeAmount, incomeDate, userId);
-        return new ResponseEntity<>(true, HttpStatus.OK);
-    }
+    public ResponseEntity<String> createIncome(
+            @RequestBody List<IncomeDto> incomeDtoList,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        boolean allSuccess = true;
 
-    @PostMapping("/expense")
-    public ResponseEntity<Boolean> expenseCreate(@RequestBody Map<String, Object> data) {
-        int expenseAmount = (Integer) data.get("expenseAmount");
-        String expenseDate = (String) data.get("expenseDate");
-        Long userId = (Long) data.get("userId");
-        boolean result = ledgerService.createExpense(expenseAmount, expenseDate, userId);
-        return new ResponseEntity<>(true, HttpStatus.OK);
-    }
+        for (IncomeDto incomeDto : incomeDtoList) {
+            boolean isSuccess = ledgerService.createIncome(incomeDto, userDetails);
 
-    // 수입, 지출 수정
-    @PutMapping("/{type}/{id}")
-    public ResponseEntity<Boolean> updateEntry(
-            @PathVariable String type,
-            @PathVariable long id,
-            @RequestBody Map<String, Object> data) {
-        if ("income".equalsIgnoreCase(type)) {
-            int newIncomeAmount = (int) data.get("incomeAmount");
-            String newIncomeDate = (String) data.get("incomeDate");
-            boolean result = ledgerService.updateIncome(id, newIncomeAmount, newIncomeDate);
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } else if ("expense".equalsIgnoreCase(type)) {
-            int newExpenseAmount = (int) data.get("expenseAmount");
-            String newExpenseDate = (String) data.get("expenseDate");
-            boolean result = ledgerService.updateExpense(id, newExpenseAmount, newExpenseDate);
-            return new ResponseEntity<>(result, HttpStatus.OK);
+            if (!isSuccess) {
+                allSuccess = false;
+                break;
+            }
+        }
+
+        if (allSuccess) {
+            return ResponseEntity.ok("수입 등록 완료");
         } else {
-            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("실패");
         }
     }
 
-    // 합계
-    @GetMapping("/total")
-    public ResponseEntity<Map<String, Integer>> calculateTotals() {
-        int totalIncome = ledgerService.calculateTotalIncome();
-        int totalExpense = ledgerService.calculateTotalExpense();
+    // 지출 등록
+    @PostMapping("/expense")
+    public ResponseEntity<String> createExpense(
+            @RequestBody List<ExpenseDto> expenseDtoList,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        boolean allSuccess = true;
 
-        Map<String, Integer> totals = new HashMap<>();
-        totals.put("totalIncome", totalIncome);
-        totals.put("totalExpense", totalExpense);
+        for (ExpenseDto expenseDto : expenseDtoList) {
+            boolean isSuccess = ledgerService.createExpense(expenseDto, userDetails);
 
-        return ResponseEntity.ok(totals);
+            if (!isSuccess) {
+                allSuccess = false;
+                break;
+            }
+        }
+
+        if (allSuccess) {
+            return ResponseEntity.ok("지출 등록 완료");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("실패");
+        }
     }
+
+    //수정
+    // 수입 수정
+    @PutMapping("/{incomeId}")
+    public ResponseEntity<String> updateIncome(
+            @PathVariable Long incomeId,
+            @RequestBody IncomeDto incomeDto) {
+
+        boolean isSuccess = ledgerService.updateIncome(incomeId, incomeDto);
+
+        if (isSuccess) {
+            return ResponseEntity.ok("수입이 성공적으로 수정되었습니다.");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("수입 수정에 실패했습니다.");
+        }
+    }
+
+
+    //조회
+    // 수입 조회
+    @GetMapping("/incomes")
+    public ResponseEntity<List<IncomeDto>> getIncomes(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<IncomeDto> incomeDtoList = ledgerService.getIncomes(userDetails);
+        return ResponseEntity.ok(incomeDtoList);
+    }
+
+    // 지출 조회
+    @GetMapping("/expenses")
+    public ResponseEntity<List<ExpenseDto>> getExpenses(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<ExpenseDto> expenseDtoList = ledgerService.getExpenses(userDetails);
+        return ResponseEntity.ok(expenseDtoList);
+    }
+
 
 }
 

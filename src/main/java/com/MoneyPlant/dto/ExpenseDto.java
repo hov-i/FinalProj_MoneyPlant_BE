@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ExpenseDto {
     private Long ExpenseId;
-    private Long id;
+    private Long userId;
     private int expenseAmount;
     private String expenseDate;
 }

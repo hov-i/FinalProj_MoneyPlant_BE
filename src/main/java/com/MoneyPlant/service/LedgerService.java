@@ -1,18 +1,19 @@
 package com.MoneyPlant.service;
 
-import com.MoneyPlant.entity.Expense;
-import com.MoneyPlant.entity.Income;
-import com.MoneyPlant.entity.User;
-import com.MoneyPlant.repository.ExpenseRepository;
-import com.MoneyPlant.repository.IncomeRepository;
-import com.MoneyPlant.repository.UserRepository;
+import com.MoneyPlant.dto.BudgetDto;
+import com.MoneyPlant.dto.ExpenseDto;
+import com.MoneyPlant.dto.IncomeDto;
+import com.MoneyPlant.entity.*;
+import com.MoneyPlant.repository.*;
+import com.MoneyPlant.service.jwt.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 @Transactional
@@ -24,86 +25,110 @@ public class LedgerService {
     private final ExpenseRepository expenseRepository;
     private final UserRepository userRepository;
 
-    // 수입, 지출 추가
-    public boolean createIncome(int incomeAmount, String incomeDate, Long id) {
-        Income income = new Income();
-        income.setIncomeAmount(incomeAmount);
-        income.setIncomeDate(incomeDate);
+    //등록
+    //----------------------------------------------------------
+    // 수입 등록
+    public boolean createIncome(IncomeDto incomeDto, UserDetailsImpl userDetails) {
+        try {
+            Long userId = userDetails.getId();
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid id"));
-        income.setId(user);
+            Income income = new Income();
+            income.setUser(user);
+            income.setIncomeAmount(incomeDto.getIncomeAmount());
+            income.setIncomeDate(incomeDto.getIncomeDate());
 
-        Income saveItem = incomeRepository.save(income);
-        log.info("수입 : " + saveItem.getIncomeAmount());
-        return true;
-    }
-
-    public boolean createExpense(int expenseAmount, String expenseDate, Long id) {
-        Expense expense = new Expense();
-        expense.setExpenseAmount(expenseAmount);
-        expense.setExpenseDate(expenseDate);
-
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid id"));
-        expense.setId(user);
-
-        Expense saveItem = expenseRepository.save(expense);
-        log.info("지출 : " + saveItem.getExpenseAmount());
-        return true;
-    }
-
-
-
-    // 수입, 지출 수정
-    // 수입 수정
-    public boolean updateIncome(long incomeId, int newIncomeAmount, String newIncomeDate) {
-        Optional<Income> optionalIncome = incomeRepository.findById(incomeId);
-        if (optionalIncome.isPresent()) {
-            Income income = optionalIncome.get();
-            income.setIncomeAmount(newIncomeAmount);
-            income.setIncomeDate(newIncomeDate);
             incomeRepository.save(income);
             return true;
+        } catch (Exception e) {
+            log.error("수입 등록 error", e);
+            return false;
         }
-        return false;
     }
 
-    // 지출 수정
-    public boolean updateExpense(long expenseId, int newExpenseAmount, String newExpenseDate) {
-        Optional<Expense> optionalExpense = expenseRepository.findById(expenseId);
-        if (optionalExpense.isPresent()) {
-            Expense expense = optionalExpense.get();
-            expense.setExpenseAmount(newExpenseAmount);
-            expense.setExpenseDate(newExpenseDate);
+    // 지출 등록
+    public boolean createExpense(ExpenseDto expenseDto, UserDetailsImpl userDetails) {
+        try {
+            Long userId = userDetails.getId();
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
+            Expense expense = new Expense();
+            expense.setUser(user);
+            expense.setExpenseAmount(expenseDto.getExpenseAmount());
+            expense.setExpenseDate(expenseDto.getExpenseDate());
+
             expenseRepository.save(expense);
             return true;
+        } catch (Exception e) {
+            log.error("지출 등록 error", e);
+            return false;
         }
-        return false;
+    }
+
+    //----------------------------------------------------------
+    //수정
+    // 수입 수정
+    public boolean updateIncome(Long incomeId, IncomeDto incomeDto) {
+        try {
+            Income income = incomeRepository.findById(incomeId)
+                    .orElseThrow(() -> new RuntimeException("해당 수입을 찾을 수 없습니다."));
+
+            // 수정할 내용을 incomeDto에서 가져와서 해당 수입에 반영합니다.
+            income.setIncomeAmount(incomeDto.getIncomeAmount());
+            income.setIncomeDate(incomeDto.getIncomeDate());
+
+            incomeRepository.save(income); // 수정된 수입을 저장합니다.
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 
-    // 수입, 지출 삭제
 
+    //----------------------------------------------------------
+    //조회
+    // 수입 조회
+    public List<IncomeDto> getIncomes(UserDetailsImpl userDetails) {
+        Long userId = userDetails.getId();
+        List<Income> incomeList = incomeRepository.findByUserId(userId);
 
-    // 합계
-    // 수입, 지출 합계
-    public int calculateTotalIncome() {
-        List<Income> incomes = incomeRepository.findAll();
-        int totalIncome = 0;
-        for (Income income : incomes) {
-            totalIncome += income.getIncomeAmount();
+        List<IncomeDto> incomeDtoList = new ArrayList<>();
+        for (Income income : incomeList) {
+            IncomeDto incomeDto = new IncomeDto();
+            //필요 조회 정보
+            incomeDto.setIncomeAmount(income.getIncomeAmount());
+            incomeDto.setIncomeDate(income.getIncomeDate());
+
+            incomeDtoList.add(incomeDto);
         }
-        return totalIncome;
+
+        return incomeDtoList;
     }
 
-    public int calculateTotalExpense() {
-        List<Expense> expenses = expenseRepository.findAll();
-        int totalExpense = 0;
-        for (Expense expense : expenses) {
-            totalExpense += expense.getExpenseAmount();
+    // 지출 조회
+    public List<ExpenseDto> getExpenses(UserDetailsImpl userDetails) {
+        Long userId = userDetails.getId();
+        List<Expense> expenseList = expenseRepository.findByUserId(userId);
+
+        List<ExpenseDto> expenseDtoList = new ArrayList<>();
+        for (Expense expense : expenseList) {
+            ExpenseDto expenseDto = new ExpenseDto();
+            expenseDto.setExpenseAmount(expense.getExpenseAmount());
+            expenseDto.setExpenseDate(expense.getExpenseDate());
+
+            expenseDtoList.add(expenseDto);
         }
-        return totalExpense;
+
+        return expenseDtoList;
     }
+
+
+
+
+
 }
 
