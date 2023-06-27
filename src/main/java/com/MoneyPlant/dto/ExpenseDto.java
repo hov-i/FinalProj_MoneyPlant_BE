@@ -15,4 +15,7 @@ public class ExpenseDto {
     private Long userId;
     private int expenseAmount;
     private String expenseDate;
+    private String expenseContent;
+    private Long categoryId;
+    private String categoryName;
 }

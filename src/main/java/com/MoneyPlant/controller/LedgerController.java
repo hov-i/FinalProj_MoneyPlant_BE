@@ -73,17 +73,18 @@ public class LedgerController {
 
     //수정
     // 수입 수정
-    @PutMapping("/{incomeId}")
-    public ResponseEntity<String> updateIncome(
+    @PutMapping("/incomes/{incomeId}")
+    public ResponseEntity<?> updateIncome(
             @PathVariable Long incomeId,
-            @RequestBody IncomeDto incomeDto) {
+            @RequestBody IncomeDto updatedIncomeDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        boolean isUpdated = ledgerService.updateIncome(incomeId, updatedIncomeDto);
 
-        boolean isSuccess = ledgerService.updateIncome(incomeId, incomeDto);
-
-        if (isSuccess) {
-            return ResponseEntity.ok("수입이 성공적으로 수정되었습니다.");
+        if (isUpdated) {
+            return ResponseEntity.ok("수입 정보가 성공적으로 수정되었습니다.");
         } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("수입 수정에 실패했습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("수입 정보 수정에 실패하였습니다.");
         }
     }
 

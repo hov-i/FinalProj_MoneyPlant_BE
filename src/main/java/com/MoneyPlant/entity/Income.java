@@ -26,6 +26,9 @@ public class Income {
     @Column(name = "income_date")
     private String incomeDate;
 
+    @Column(name = "income_content")
+    private String incomeContent;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
