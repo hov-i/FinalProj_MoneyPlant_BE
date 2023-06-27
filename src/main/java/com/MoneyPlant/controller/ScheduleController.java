@@ -1,7 +1,6 @@
 package com.MoneyPlant.controller;
 
 import com.MoneyPlant.dto.ScheduleDto;
-import com.MoneyPlant.entity.Schedule;
 import com.MoneyPlant.service.ScheduleService;
 import com.MoneyPlant.service.jwt.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -10,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
@@ -22,18 +21,27 @@ import javax.servlet.http.HttpServletRequest;
 @RequiredArgsConstructor
 public class ScheduleController {
     @Autowired
-    ScheduleService scheduleService;
+    private final ScheduleService scheduleService;
 
-    @PostMapping
+    // 캘린더 일정 등록
     public ResponseEntity<String> createSchedule(
-            @RequestBody ScheduleDto scheduleDto,
+            @RequestBody List<ScheduleDto> scheduleList,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        boolean isSuccess = scheduleService.createSchedule(scheduleDto, userDetails);
+        boolean allSuccess = true;
 
-        if (isSuccess) {
-            return ResponseEntity.ok("일정이 생성되었습니다.");
+        for (ScheduleDto scheduleDto : scheduleList) {
+            boolean isSuccess = scheduleService.createSchedule(scheduleDto, userDetails);
+
+            if (!isSuccess) {
+                allSuccess = false;
+                break; // 반복 종료
+            }
+        }
+
+        if (allSuccess) {
+            return ResponseEntity.ok("일정 생성 완료");
         } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("일정 생성을 실패했습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("일정 생성 실패");
         }
     }
 }
