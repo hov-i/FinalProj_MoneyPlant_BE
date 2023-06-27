@@ -17,7 +17,7 @@ public class Work {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long workId; // 근무 Id
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
     private User user; // userId
 

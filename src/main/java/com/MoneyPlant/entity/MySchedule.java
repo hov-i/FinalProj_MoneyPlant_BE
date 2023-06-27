@@ -18,9 +18,9 @@ public class MySchedule { // 약어로 sc를 사용합니다.
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long myScId; // 일정 Id
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
-    private User user;
+    private User user; // userId
 
     @Column(name = "my_sc_name", nullable = false)
     private String myScName; // 일정 이름

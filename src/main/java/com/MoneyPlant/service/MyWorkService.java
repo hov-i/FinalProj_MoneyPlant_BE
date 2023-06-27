@@ -1,6 +1,6 @@
 package com.MoneyPlant.service;
 
-import com.MoneyPlant.dto.ScheduleDto;
+import com.MoneyPlant.dto.MyWorkDto;
 import com.MoneyPlant.entity.*;
 import com.MoneyPlant.repository.*;
 import com.MoneyPlant.service.jwt.UserDetailsImpl;
@@ -23,38 +23,38 @@ import java.util.List;
 @Transactional
 @Slf4j
 @RequiredArgsConstructor
-public class ScheduleService {
-    private final ScheduleRepository scheduleRepository;
+public class MyWorkService {
+    private final MyWorkRepository myWorkRepository;
     private final UserRepository userRepository;
 
-    // 캘린더 일정 생성
-    @Transactional
-    public boolean createSchedule(ScheduleDto scheduleDto, UserDetailsImpl userDetails) {
+    // 마이페이지 나의 근무 생성
+    public boolean createMyWork(MyWorkDto myWorkDto, UserDetailsImpl userDetails) {
         try {
             Long userId = userDetails.getId();
-            scheduleDto.setUserId(userId);
+            myWorkDto.setUserId(userId);
 
             User user = userRepository.findById(userId)
                     .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
-            Schedule schedule = new Schedule();
-            schedule.setUser(user);
-            schedule.setCalId(scheduleDto.getCalId());
-            schedule.setScName(scheduleDto.getScName());
-            schedule.setScDate(scheduleDto.getScDate());
-            schedule.setScBudget(scheduleDto.getScBudget());
+            MyWork myWork = new MyWork();
+            myWork.setUser(user);
+            myWork.setPayType(myWorkDto.getMyPayType());
+            myWork.setWorkName(myWorkDto.getMyWorkName());
+            myWork.setWorkTime( myWorkDto.getMyWorkTime());
+            myWork.setWorkPay( myWorkDto.getMyWorkPay());
+            myWork.setPayDay( myWorkDto.getMyPayDay());
 
-            scheduleRepository.save(schedule);
-
+            myWorkRepository.save(myWork);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
+
             return false;
         }
     }
 
-    // 마이페이지 나의 일정 수정
+    // 마이페이지 나의 근무 수정
 
-    // 마이페이지 나의 일정 삭제
+    // 마이페이지 나의 근무 삭제
 
 }
