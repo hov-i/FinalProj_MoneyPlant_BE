@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 
 
@@ -19,7 +21,7 @@ public class CardService {
         this.cardRepository = cardRepository;
     }
 
-    @Scheduled(fixedRate = 1) // 초기 실행 시에만 실행되도록 설정
+    @PostConstruct
     public void executeCardCrawlerOnStartup() {
         if (isFirstExecution) {
             executeCardCrawler();
