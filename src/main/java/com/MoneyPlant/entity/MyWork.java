@@ -21,19 +21,22 @@ public class MyWork {
     @JoinColumn(name = "id")
     private User user; // userId
 
-    @Column(name = "my_pay_type")
-    private String payType; // 급여 타입
-
     @Column(name = "my_work_name", nullable = false)
-    private String workName; // 근무 이름
+    private String myWorkName; // 근무 이름
+
+    @Column(name = "my_work_color", nullable = false)
+    private String myWorkColor; // 근무 색깔
+
+    @Column(name = "my_pay_type")
+    private String myPayType; // 급여 타입
 
     @Column(name = "my_work_time", nullable = false)
-    private int workTime; // 근무 시간
+    private int myWorkTime; // 근무 시간
 
     @Column(name = "my_work_pay")
-    private int workPay; // 일일 급여
+    private int myWorkPay; // 일일 급여
 
     @Column(name = "my_pay_day", nullable = false)
-    private int payDay; // 급여 지급일
+    private int myPayDay; // 급여 지급일
 
 }
