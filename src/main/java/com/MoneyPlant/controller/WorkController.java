@@ -1,7 +1,7 @@
 package com.MoneyPlant.controller;
 
-import com.MoneyPlant.dto.ScheduleDto;
-import com.MoneyPlant.service.ScheduleService;
+import com.MoneyPlant.dto.WorkDto;
+import com.MoneyPlant.service.WorkService;
 import com.MoneyPlant.service.jwt.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,31 +17,32 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @Slf4j
 @CrossOrigin(origins = "https://localhost:3000", allowedHeaders = "*")
-@RequestMapping("/schedule")
+@RequestMapping("/work")
 @RequiredArgsConstructor
-public class ScheduleController {
+public class WorkController {
     @Autowired
-    private final ScheduleService scheduleService;
+    private final WorkService workService;
 
-    // 캘린더 일정 등록
-    public ResponseEntity<String> createSchedule(
-            @RequestBody List<ScheduleDto> scheduleList,
+    // 캘린더 근무 등록
+    @PostMapping("/create")
+    public ResponseEntity<String> createWork(
+            @RequestBody List<WorkDto> workDtoList,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         boolean allSuccess = true;
 
-        for (ScheduleDto scheduleDto : scheduleList) {
-            boolean isSuccess = scheduleService.createSchedule(scheduleDto, userDetails);
+        for (WorkDto workDto : workDtoList) {
+            boolean isSuccess = workService.createWork(workDto, userDetails);
 
-            if (!isSuccess) {
+            if(!isSuccess) {
                 allSuccess = false;
-                break; // 반복 종료
+                break;
             }
         }
 
         if (allSuccess) {
-            return ResponseEntity.ok("일정 생성 완료");
+            return ResponseEntity.ok("근무 생성 완료");
         } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("일정 생성 실패");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("근무 생성을 실패");
         }
     }
 }

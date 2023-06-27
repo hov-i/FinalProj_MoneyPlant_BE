@@ -19,5 +19,4 @@
         private Long categoryId;
         private Long userId;
         private String categoryName;
-
     }

@@ -17,9 +17,9 @@ public class Schedule { // 약어로 sc를 사용합니다.
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long scId; // 일정 Id
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
-    private User user;
+    private User user; // userId
 
     @Column(name = "calendar_id", unique = true)
     private String calId; // 구글 캘린더 ID

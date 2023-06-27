@@ -1,7 +1,7 @@
 package com.MoneyPlant.controller;
 
-import com.MoneyPlant.dto.ScheduleDto;
-import com.MoneyPlant.service.ScheduleService;
+import com.MoneyPlant.dto.MyScheduleDto;
+import com.MoneyPlant.service.MyScheduleService;
 import com.MoneyPlant.service.jwt.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,29 +17,28 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @Slf4j
 @CrossOrigin(origins = "https://localhost:3000", allowedHeaders = "*")
-@RequestMapping("/schedule")
+@RequestMapping("/my-schedule")
 @RequiredArgsConstructor
-public class ScheduleController {
+public class MyScheduleController {
     @Autowired
-    private final ScheduleService scheduleService;
+    private final MyScheduleService myScheduleService;
 
-    // 캘린더 일정 등록
-    public ResponseEntity<String> createSchedule(
-            @RequestBody List<ScheduleDto> scheduleList,
+    // 마이페이지 나의 일정 등록
+    @PostMapping("/create")
+    public ResponseEntity<String> createMySchedule(
+            @RequestBody List<MyScheduleDto> myScheduleList,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         boolean allSuccess = true;
-
-        for (ScheduleDto scheduleDto : scheduleList) {
-            boolean isSuccess = scheduleService.createSchedule(scheduleDto, userDetails);
-
-            if (!isSuccess) {
-                allSuccess = false;
-                break; // 반복 종료
+            for (MyScheduleDto myScheduleDto : myScheduleList) {
+                boolean isSuccess = myScheduleService.createMySchedule(myScheduleDto, userDetails);
+                if (!isSuccess) {
+                    allSuccess = false;
+                    break; // 반복 종료
+                }
             }
-        }
 
         if (allSuccess) {
-            return ResponseEntity.ok("일정 생성 완료");
+            return ResponseEntity.ok("나의 일정 생성 완료");
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("일정 생성 실패");
         }

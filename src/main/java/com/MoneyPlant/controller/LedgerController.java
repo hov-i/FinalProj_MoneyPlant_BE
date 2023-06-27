@@ -3,78 +3,106 @@ package com.MoneyPlant.controller;
 import com.MoneyPlant.dto.ExpenseDto;
 import com.MoneyPlant.dto.IncomeDto;
 import com.MoneyPlant.service.LedgerService;
-import org.springframework.data.crossstore.ChangeSetPersister;
+import com.MoneyPlant.service.jwt.UserDetailsImpl;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/ledger")
+@RequiredArgsConstructor
+@Slf4j
+@CrossOrigin(origins = "https://localhost:3000", allowedHeaders = "*")
+@RequestMapping("/ledger")
 public class LedgerController {
 
+    @Autowired
     private final LedgerService ledgerService;
 
-    public LedgerController(LedgerService ledgerService) {
-        this.ledgerService = ledgerService;
+    //등록
+    // 수입 등록
+    @PostMapping("/income")
+    public ResponseEntity<String> createIncome(
+            @RequestBody List<IncomeDto> incomeDtoList,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        boolean allSuccess = true;
+
+        for (IncomeDto incomeDto : incomeDtoList) {
+            boolean isSuccess = ledgerService.createIncome(incomeDto, userDetails);
+
+            if (!isSuccess) {
+                allSuccess = false;
+                break;
+            }
+        }
+
+        if (allSuccess) {
+            return ResponseEntity.ok("수입 등록 완료");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("실패");
+        }
+    }
+
+    // 지출 등록
+    @PostMapping("/expense")
+    public ResponseEntity<String> createExpense(
+            @RequestBody List<ExpenseDto> expenseDtoList,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        boolean allSuccess = true;
+
+        for (ExpenseDto expenseDto : expenseDtoList) {
+            boolean isSuccess = ledgerService.createExpense(expenseDto, userDetails);
+
+            if (!isSuccess) {
+                allSuccess = false;
+                break;
+            }
+        }
+
+        if (allSuccess) {
+            return ResponseEntity.ok("지출 등록 완료");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("실패");
+        }
+    }
+
+    //수정
+    // 수입 수정
+    @PutMapping("/incomes/{incomeId}")
+    public ResponseEntity<?> updateIncome(
+            @PathVariable Long incomeId,
+            @RequestBody IncomeDto updatedIncomeDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        boolean isUpdated = ledgerService.updateIncome(incomeId, updatedIncomeDto);
+
+        if (isUpdated) {
+            return ResponseEntity.ok("수입 정보가 성공적으로 수정되었습니다.");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("수입 정보 수정에 실패하였습니다.");
+        }
     }
 
 
-    // 내역 저장
-        @PostMapping("/income")
-        public ResponseEntity<IncomeDto> createIncome(@RequestBody IncomeDto incomeDto) {
-            IncomeDto createdIncome = ledgerService.createIncome(incomeDto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdIncome);
-        }
-
-        @PostMapping("/expense")
-        public ResponseEntity<ExpenseDto> createExpense(@RequestBody ExpenseDto expenseDto) {
-            ExpenseDto createdExpense = ledgerService.createExpense(expenseDto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdExpense);
-        }
-
-
-        // 수입, 지출 수정
-        @PutMapping("/income/{incomeId}")
-        public ResponseEntity<IncomeDto> updateIncome(@PathVariable Long incomeId, @RequestBody IncomeDto incomeDto) throws ChangeSetPersister.NotFoundException {
-            IncomeDto updatedIncome = ledgerService.updateIncome(incomeId, incomeDto);
-            return ResponseEntity.ok(updatedIncome);
-        }
-
-    @PutMapping("/expense/{expenseId}")
-    public ResponseEntity<ExpenseDto> updateExpense(@PathVariable Long expenseId, @RequestBody ExpenseDto expenseDto) throws ChangeSetPersister.NotFoundException {
-        ExpenseDto updatedExpense = ledgerService.updateExpense(expenseId, expenseDto);
-        return ResponseEntity.ok(updatedExpense);
+    //조회
+    // 수입 조회
+    @GetMapping("/incomes")
+    public ResponseEntity<List<IncomeDto>> getIncomes(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<IncomeDto> incomeDtoList = ledgerService.getIncomes(userDetails);
+        return ResponseEntity.ok(incomeDtoList);
     }
 
-    // 합계
-    @PostMapping("/total")
-    public ResponseEntity<Integer> getTotal(@RequestBody List<IncomeDto> incomeList,
-                                            @RequestBody List<ExpenseDto> expenseList) {
-        int totalIncome = calculateTotalIncome(incomeList);
-        int totalExpense = calculateTotalExpense(expenseList);
-        int balance = totalIncome - totalExpense;
-        return ResponseEntity.ok(balance);
+    // 지출 조회
+    @GetMapping("/expenses")
+    public ResponseEntity<List<ExpenseDto>> getExpenses(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<ExpenseDto> expenseDtoList = ledgerService.getExpenses(userDetails);
+        return ResponseEntity.ok(expenseDtoList);
     }
-
-    private int calculateTotalIncome(List<IncomeDto> incomeList) {
-        int totalIncome = 0;
-        for (IncomeDto income : incomeList) {
-            totalIncome += income.getIncome();
-        }
-        return totalIncome;
-    }
-
-    private int calculateTotalExpense(List<ExpenseDto> expenseList) {
-        int totalExpense = 0;
-        for (ExpenseDto expense : expenseList) {
-            totalExpense += expense.getExpense();
-        }
-        return totalExpense;
-    }
-
-
 
 
 }
