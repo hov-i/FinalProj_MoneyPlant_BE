@@ -38,11 +38,12 @@ public class MyWorkService {
 
             MyWork myWork = new MyWork();
             myWork.setUser(user);
-            myWork.setPayType(myWorkDto.getMyPayType());
-            myWork.setWorkName(myWorkDto.getMyWorkName());
-            myWork.setWorkTime( myWorkDto.getMyWorkTime());
-            myWork.setWorkPay( myWorkDto.getMyWorkPay());
-            myWork.setPayDay( myWorkDto.getMyPayDay());
+            myWork.setMyWorkName(myWorkDto.getMyWorkName());
+            myWork.setMyWorkColor(myWork.getMyWorkColor());
+            myWork.setMyPayType(myWorkDto.getMyPayType());
+            myWork.setMyWorkTime(myWorkDto.getMyWorkTime());
+            myWork.setMyWorkPay(myWorkDto.getMyWorkPay());
+            myWork.setMyPayDay(myWorkDto.getMyPayDay());
 
             myWorkRepository.save(myWork);
             return true;
@@ -57,4 +58,22 @@ public class MyWorkService {
 
     // 마이페이지 나의 근무 삭제
 
+    // ===========================================================================
+    // 마이페이지 전체 나의 근무 조회
+    public List<MyWorkDto> getWorkForMyPage(UserDetailsImpl userDetails) {
+        Long userId = userDetails.getId();
+        List<MyWork> myWorkList = myWorkRepository.findByUserId(userId);
+
+        List<MyWorkDto> myWorkDtoList = new ArrayList<>();
+        for (MyWork myWork : myWorkList) {
+            MyWorkDto myWorkDto = new MyWorkDto();
+
+            // 조회 내용 : 근무 이름, 근무 깔
+            myWorkDto.setMyWorkName(myWork.getMyWorkName());
+            myWorkDto.setMyWorkColor(myWork.getMyWorkColor());
+
+            myWorkDtoList.add(myWorkDto);
+        }
+        return myWorkDtoList;
+    }
 }

@@ -39,6 +39,7 @@ public class MyScheduleService {
             MySchedule mySchedule = new MySchedule();
             mySchedule.setUser(user);
             mySchedule.setMyScName(myScheduleDto.getMyScName());
+            mySchedule.setMyScColor(mySchedule.getMyScColor());
             mySchedule.setMyScBudget(myScheduleDto.getMyScBudget());
 
             myScheduleRepository.save(mySchedule);
@@ -54,4 +55,23 @@ public class MyScheduleService {
 
     // 마이페이지 나의 일정 삭제
 
+
+// ===========================================================================
+    // 마이페이지 전체 나의 일정 조회
+    public List<MyScheduleDto> getScheduleForMyPage(UserDetailsImpl userDetails) {
+        Long userId = userDetails.getId();
+        List<MySchedule> myScheduleList = myScheduleRepository.findByUserId(userId);
+
+        List<MyScheduleDto> myScheduleDtoList = new ArrayList<>();
+        for (MySchedule mySchedule : myScheduleList) {
+            MyScheduleDto myScheduleDto = new MyScheduleDto();
+
+            // 조회 내용 : 일정 이름, 일정 색깔
+            myScheduleDto.setMyScName(mySchedule.getMyScName());
+            myScheduleDto.setMyScColor(mySchedule.getMyScColor());
+
+            myScheduleDtoList.add(myScheduleDto);
+        }
+        return myScheduleDtoList;
+    }
 }

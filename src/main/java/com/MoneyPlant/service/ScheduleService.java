@@ -41,6 +41,7 @@ public class ScheduleService {
             schedule.setUser(user);
             schedule.setCalId(scheduleDto.getCalId());
             schedule.setScName(scheduleDto.getScName());
+            schedule.setScColor(scheduleDto.getScColor());
             schedule.setScDate(scheduleDto.getScDate());
             schedule.setScBudget(scheduleDto.getScBudget());
 
@@ -53,8 +54,50 @@ public class ScheduleService {
         }
     }
 
-    // 마이페이지 나의 일정 수정
+    // 나의 일정 가져와서 등록하기
 
-    // 마이페이지 나의 일정 삭제
+    // 캘린더 일정 수정
 
+    // 캘린더 일정 삭제
+
+
+// ===========================================================================
+    // 캘린더 전체 일정 조회 - 달력
+    public List<ScheduleDto> getScheduleForCal(UserDetailsImpl userDetails) {
+        Long userId = userDetails.getId();
+        List<Schedule> scheduleList = scheduleRepository.findByUserId(userId);
+
+        List<ScheduleDto> scheduleDtoList = new ArrayList<>();
+        for (Schedule schedule : scheduleList) {
+            ScheduleDto scheduleDto = new ScheduleDto();
+
+            // 조회 내용 : 일정 날짜, 일정 이름, 일정 색깔
+            scheduleDto.setScDate(schedule.getScDate());
+            scheduleDto.setScName(schedule.getScName());
+            scheduleDto.setScColor(schedule.getScColor());
+
+            scheduleDtoList.add(scheduleDto);
+        }
+        return scheduleDtoList;
+    }
+
+    // 캘린더 전체 일정 조회 - 일별 상세
+    public List<ScheduleDto> getScheduleForDetail(UserDetailsImpl userDetails) {
+        Long userId = userDetails.getId();
+        List<Schedule> scheduleList = scheduleRepository.findByUserId(userId);
+
+        List<ScheduleDto> scheduleDtoList = new ArrayList<>();
+        for (Schedule schedule : scheduleList) {
+            ScheduleDto scheduleDto = new ScheduleDto();
+
+            // 조회 내용 : 일정 날짜, 일정 이름, 일정 색깔, 일정 예산
+            scheduleDto.setScDate(schedule.getScDate());
+            scheduleDto.setScName(schedule.getScName());
+            scheduleDto.setScColor(schedule.getScColor());
+            scheduleDto.setScBudget(schedule.getScBudget());
+
+            scheduleDtoList.add(scheduleDto);
+        }
+        return scheduleDtoList;
+    }
 }

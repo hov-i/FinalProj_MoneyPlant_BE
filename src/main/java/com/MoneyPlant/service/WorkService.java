@@ -37,8 +37,9 @@ public class WorkService {
 
             Work work = new Work();
             work.setUser(user);
-            work.setPayType(workDto.getPayType());
             work.setWorkName(workDto.getWorkName());
+            work.setWorkColor(work.getWorkColor());
+            work.setPayType(workDto.getPayType());
             work.setWorkDate(workDto.getWorkDate());
             work.setWorkTime(workDto.getWorkTime());
             work.setWorkPay(workDto.getWorkPay());
@@ -54,8 +55,51 @@ public class WorkService {
         }
     }
 
+    // 나의 근무 가져와서 등록하기
+
     // 캘린더 근무 수정
 
     // 캘린더 근무 삭제
 
+
+// ===========================================================================
+    // 캘린더 전체 근무 조회 - 달력
+    public List<WorkDto> getWorkForCal(UserDetailsImpl userDetails) {
+        Long userId = userDetails.getId();
+        List<Work> workList = workRepository.findByUserId(userId);
+
+        List<WorkDto> workDtoList = new ArrayList<>();
+        for (Work work : workList) {
+            WorkDto workDto = new WorkDto();
+
+            // 조회 내용 :  근무 날짜, 근무 이름, 근무 색깔
+            workDto.setWorkDate(work.getWorkDate());
+            workDto.setWorkName(work.getWorkName());
+            workDto.setWorkColor(work.getWorkColor());
+
+            workDtoList.add(workDto);
+        }
+        return workDtoList;
+    }
+
+    // 캘린더 전체 근무 조회 - 일별 상세
+    public List<WorkDto> getWorkForDetail(UserDetailsImpl userDetails) {
+        Long userId = userDetails.getId();
+        List<Work> workList = workRepository.findByUserId(userId);
+
+        List<WorkDto> workDtoList = new ArrayList<>();
+        for (Work work : workList) {
+            WorkDto workDto = new WorkDto();
+
+            // 조회 내용 :  근무 날짜, 근무 이름, 근무 색깔
+            workDto.setWorkName(work.getWorkName());
+            workDto.setWorkColor(work.getWorkColor());
+            workDto.setWorkDate(work.getWorkDate());
+            workDto.setWorkTime(work.getWorkTime());
+            workDto.setWorkPay(work.getWorkPay());
+
+            workDtoList.add(workDto);
+        }
+        return workDtoList;
+    }
 }
