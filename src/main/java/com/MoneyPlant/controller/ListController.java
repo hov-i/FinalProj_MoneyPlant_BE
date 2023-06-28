@@ -31,14 +31,14 @@ public class ListController {
     private final ListService listService;
 
     // 수입&카테고리 조회
-    @GetMapping("/incomes/category")
+    @GetMapping("/income/category")
     public ResponseEntity<List<IncomeDto>> getIncomeWithCategory(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         List<IncomeDto> incomeDtoList = listService.getIncomeWithCategory(userDetails);
         return ResponseEntity.ok(incomeDtoList);
     }
 
     // 지출&카테고리 조회
-    @GetMapping("/expenses/category")
+    @GetMapping("/expense/category")
     public ResponseEntity<List<ExpenseDto>> getExpenseWithCategory(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         List<ExpenseDto> expenseDtoList = listService.getExpenseWithCategory(userDetails);
         return ResponseEntity.ok(expenseDtoList);
