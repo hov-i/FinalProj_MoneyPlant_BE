@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -16,6 +18,7 @@ public class CardService {
 
     private boolean isFirstExecution = true;
     private final CardRepository cardRepository;
+
     @Autowired
     public CardService(CardRepository cardRepository) {
         this.cardRepository = cardRepository;
@@ -34,17 +37,20 @@ public class CardService {
         executeCardCrawler();
     }
 
+    @Transactional
     private void executeCardCrawler() {
         try {
-            cardRepository.deleteAll(); // card_list 모든 데이터 삭제
+            cardRepository.deleteAll(); // card_list의 모든 데이터를 삭제합니다.
             String pythonScriptPath = "src/main/resources/python/CardCrolling.py";
             ProcessBuilder processBuilder = new ProcessBuilder("python", pythonScriptPath);
             Process process = processBuilder.start();
             int exitCode = process.waitFor();
             if (exitCode == 0) {
                 log.info("CardCrolling.py 실행이 성공했습니다.");
+                cardRepository.deleteByCardName("신용카드");
             } else {
                 log.error("CardCrolling.py 실행이 실패했습니다. 종료 코드: " + exitCode);
+                executeCardCrawler();
             }
         } catch (InterruptedException | IOException e) {
             throw new RuntimeException(e);

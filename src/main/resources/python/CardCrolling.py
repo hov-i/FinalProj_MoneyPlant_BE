@@ -60,12 +60,17 @@ def scrape_and_store_cards(url, category, num_iterations):
 
 # Example usage
 categories = {
-    "반려동물": ("https://card-search.naver.com/category-list?category=pet", 5),
-    "주유": ("https://card-search.naver.com/category-list?category=gas", 10),
-    "식비": ("https://card-search.naver.com/category-list?category=food", 7),
-    "문화/레저": ("https://card-search.naver.com/category-list?category=culture", 9),
-    "마트/편의점": ("https://card-search.naver.com/category-list?category=mart", 8),
-    "패션/미용": ("https://card-search.naver.com/category-list?category=fashion", 6)
+    "주유": ("https://card-search.naver.com/list?benefitCategoryIds=1&sortMethod=qc&isRefetch=true&bizType=CPC", 10),
+    "식비": ("https://card-search.naver.com/list?benefitCategoryIds=14&sortMethod=qc&isRefetch=true&bizType=CPC", 9),
+    "문화/레저": ("https://card-search.naver.com/list?benefitCategoryIds=18%2C19&sortMethod=qc&isRefetch=true&bizType=CPC", 3),
+    "마트/편의점": ("https://card-search.naver.com/list?benefitCategoryIds=7%2C16&sortMethod=qc&isRefetch=true&bizType=CPC", 4),
+    "패션/미용": ("https://card-search.naver.com/list?benefitCategoryIds=20&sortMethod=qc&isRefetch=true&bizType=CPC", 3),
+    "여행/숙박" : ("https://card-search.naver.com/list?benefitCategoryIds=4&sortMethod=qc&isRefetch=true&bizType=CPC", 3),
+    "교통/차량" : ("https://card-search.naver.com/list?benefitCategoryIds=15&sortMethod=qc&isRefetch=true&bizType=CPC", 10),
+    "주거" : ("https://card-search.naver.com/list?benefitCategoryIds=8&sortMethod=qc&isRefetch=true&bizType=CPC", 2),
+    "의료비" : ("https://card-search.naver.com/list?benefitCategoryIds=21&sortMethod=qc&isRefetch=true&bizType=CPC", 3),
+    "교육" : ("https://card-search.naver.com/list?benefitCategoryIds=9&sortMethod=qc&isRefetch=true&bizType=CPC", 3),
+    "반려동물": ("https://card-search.naver.com/list?benefitCategoryIds=10021&sortMethod=qc&isRefetch=true&bizType=CPC", 0)
 }
 
 for category, (url, num_iterations) in categories.items():
