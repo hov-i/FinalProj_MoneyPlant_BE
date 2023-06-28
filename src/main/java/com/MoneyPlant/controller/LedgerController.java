@@ -130,14 +130,14 @@ public class LedgerController {
 
     //조회
     // 수입 조회
-    @GetMapping("/incomes")
+    @GetMapping("/income/get")
     public ResponseEntity<List<IncomeDto>> getIncomes(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         List<IncomeDto> incomeDtoList = ledgerService.getIncomes(userDetails);
         return ResponseEntity.ok(incomeDtoList);
     }
 
     // 지출 조회
-    @GetMapping("/expenses")
+    @GetMapping("/expense/get")
     public ResponseEntity<List<ExpenseDto>> getExpenses(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         List<ExpenseDto> expenseDtoList = ledgerService.getExpenses(userDetails);
         return ResponseEntity.ok(expenseDtoList);
