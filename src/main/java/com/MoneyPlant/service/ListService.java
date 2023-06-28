@@ -24,13 +24,14 @@ public class ListService {
     private final CategoryRepository categoryRepository;
 
     // 수입&카테고리 조회
-    public List<IncomeDto> getIncomeWithCategoryNames(UserDetailsImpl userDetails) {
+    public List<IncomeDto> getIncomeWithCategory(UserDetailsImpl userDetails) {
         Long userId = userDetails.getId();
         List<Income> incomeList = incomeRepository.findByUserId(userId);
 
         List<IncomeDto> incomeDtoList = new ArrayList<>();
         for (Income income : incomeList) {
             IncomeDto incomeDto = new IncomeDto();
+            incomeDto.setIncomeId(income.getIncomeId());
             incomeDto.setIncomeAmount(income.getIncomeAmount());
             incomeDto.setIncomeDate(income.getIncomeDate());
             incomeDto.setIncomeContent(income.getIncomeContent());
@@ -46,14 +47,16 @@ public class ListService {
         return incomeDtoList;
     }
 
+
     // 지출&카테고리 조회
-    public List<ExpenseDto> getExpenseWithCategoryNames(UserDetailsImpl userDetails) {
+    public List<ExpenseDto> getExpenseWithCategory(UserDetailsImpl userDetails) {
         Long userId = userDetails.getId();
         List<Expense> expenseList = expenseRepository.findByUserId(userId);
 
         List<ExpenseDto> expenseDtoList = new ArrayList<>();
         for (Expense expense : expenseList) {
             ExpenseDto expenseDto = new ExpenseDto();
+            expenseDto.setCategoryId(expense.getExpenseId());
             expenseDto.setExpenseAmount(expense.getExpenseAmount());
             expenseDto.setExpenseDate(expense.getExpenseDate());
             expenseDto.setExpenseContent(expense.getExpenseContent());

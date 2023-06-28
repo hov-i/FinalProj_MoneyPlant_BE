@@ -13,6 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -73,7 +74,7 @@ public class LedgerController {
 
     //수정
     // 수입 수정
-    @PutMapping("/incomes/{incomeId}")
+    @PutMapping("/income/update/{incomeId}")
     public ResponseEntity<?> updateIncome(
             @PathVariable Long incomeId,
             @RequestBody IncomeDto updatedIncomeDto,
@@ -85,6 +86,44 @@ public class LedgerController {
             return ResponseEntity.ok("수입 정보가 성공적으로 수정되었습니다.");
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("수입 정보 수정에 실패하였습니다.");
+        }
+    }
+
+    // 지출 수정
+    @PutMapping("/expense/update/{expenseId}")
+    public ResponseEntity<?> updateExpense(
+            @PathVariable Long expenseId,
+            @RequestBody ExpenseDto updatedExpenseDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        boolean isUpdated = ledgerService.updateExpense(expenseId, updatedExpenseDto);
+
+        if (isUpdated) {
+            return ResponseEntity.ok("지출 정보가 성공적으로 수정되었습니다.");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("지출 정보 수정에 실패하였습니다.");
+        }
+    }
+
+
+    // 삭제
+    // 수입 삭제
+    @DeleteMapping("/income/delete/{incomeId}")
+    public ResponseEntity<String> deleteIncome(@PathVariable Long incomeId) {
+        if (ledgerService.deleteIncome(incomeId)) {
+            return ResponseEntity.ok("수입 정보가 삭제되었습니다.");
+        } else {
+            return ResponseEntity.badRequest().body("수입 정보 삭제 실패");
+        }
+    }
+
+    // 지츨 삭제
+    @DeleteMapping("/expense/delete/{expenseId}")
+    public ResponseEntity<String> deleteExpense(@PathVariable Long expenseId) {
+        if (ledgerService.deleteExpense(expenseId)) {
+            return ResponseEntity.ok("지출 정보가 삭제되었습니다.");
+        } else {
+            return ResponseEntity.badRequest().body("지출 정보 삭제 실패");
         }
     }
 
@@ -103,6 +142,46 @@ public class LedgerController {
         List<ExpenseDto> expenseDtoList = ledgerService.getExpenses(userDetails);
         return ResponseEntity.ok(expenseDtoList);
     }
+
+    // 일간 개별 합계
+    // 수입
+    @GetMapping("/income/daily")
+    public ResponseEntity<Map<String, Integer>> getDailyIncome(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        Map<String, Integer> dailyIncome = ledgerService.getDailyIncome(userDetails);
+        return ResponseEntity.ok(dailyIncome);
+    }
+
+    // 지출
+    @GetMapping("/expense/daily")
+    public ResponseEntity<Map<String, Integer>> getDailyExpense(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        Map<String, Integer> dailyExpense = ledgerService.getDailyExpense(userDetails);
+        return ResponseEntity.ok(dailyExpense);
+    }
+
+
+
+    // 월간 개별 합계
+    // 수입
+    @GetMapping("/income/monthly")
+    public ResponseEntity<Map<String, Integer>> getMonthlyIncome(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        Map<String, Integer> monthlyIncome = ledgerService.getMonthlyIncome(userDetails);
+        return ResponseEntity.ok(monthlyIncome);
+    }
+
+    // 지출
+    @GetMapping("/expense/monthly")
+    public ResponseEntity<Map<String, Integer>> getMonthlyExpense(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        Map<String, Integer> monthlyExpense = ledgerService.getMonthlyExpense(userDetails);
+        return ResponseEntity.ok(monthlyExpense);
+    }
+
+    // 월간 전체 합계
+    @GetMapping("/statistics/monthly")
+    public ResponseEntity<Map<String, Integer>> getMonthlyStatistics(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        Map<String, Integer> monthlyStatistics = ledgerService.getMonthlyStatistics(userDetails);
+        return ResponseEntity.ok(monthlyStatistics);
+    }
+
 
 
 }

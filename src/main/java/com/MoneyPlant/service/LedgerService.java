@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -138,6 +140,36 @@ public class LedgerService {
         }
     }
 
+    //----------------------------------------------------------
+    //삭제
+    // 수입 삭제
+    public boolean deleteIncome(Long incomeId) {
+        try {
+            Income income = incomeRepository.findById(incomeId)
+                    .orElseThrow(() -> new RuntimeException("수입 정보를 찾을 수 없습니다."));
+
+            incomeRepository.delete(income); // 수입 정보 삭제
+            return true;
+        } catch (Exception e) {
+            System.err.println("수입 삭제 실패: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // 지출 삭제
+    public boolean deleteExpense(Long expenseId) {
+        try {
+            Expense expense = expenseRepository.findById(expenseId)
+                    .orElseThrow(() -> new RuntimeException("수입 정보를 찾을 수 없습니다."));
+
+            expenseRepository.delete(expense); // 수입 정보 삭제
+            return true;
+        } catch (Exception e) {
+            System.err.println("지출 삭제 실패: " + e.getMessage());
+            return false;
+        }
+    }
+
 
     //----------------------------------------------------------
     //조회
@@ -179,11 +211,134 @@ public class LedgerService {
     }
 
     // 일간 개별 합계 조회
+    // 수입
+    public Map<String, Integer> getDailyIncome(UserDetailsImpl userDetails) {
+        Long userId = userDetails.getId();
+
+        List<Income> incomeList = incomeRepository.findByUserId(userId);
+
+        Map<String, Integer> dailyIncome = new LinkedHashMap<>();
+
+        for (Income income : incomeList) {
+            String incomeDate = income.getIncomeDate();
+            int incomeAmount = income.getIncomeAmount();
+
+            // 이미 해당 날짜의 합계가 계산되었는지 확인
+            if (dailyIncome.containsKey(incomeDate)) {
+                int currentTotal = dailyIncome.get(incomeDate);
+                dailyIncome.put(incomeDate, currentTotal + incomeAmount);
+            } else {
+                dailyIncome.put(incomeDate, incomeAmount);
+            }
+        }
+
+        return dailyIncome;
+    }
+
+    //지출
+    public Map<String, Integer> getDailyExpense(UserDetailsImpl userDetails) {
+        Long userId = userDetails.getId();
+
+        List<Expense> expenseList = expenseRepository.findByUserId(userId);
+
+        Map<String, Integer> dailyExpense = new LinkedHashMap<>();
+
+        for (Expense expense : expenseList) {
+            String expenseDate = expense.getExpenseDate();
+            int expenseAmount = expense.getExpenseAmount();
+
+            // 이미 해당 날짜의 합계가 계산되었는지 확인
+            if (dailyExpense.containsKey(expenseDate)) {
+                int currentTotal = dailyExpense.get(expenseDate);
+                dailyExpense.put(expenseDate, currentTotal + expenseAmount);
+            } else {
+                dailyExpense.put(expenseDate, expenseAmount);
+            }
+        }
+
+        return dailyExpense;
+    }
+
+
+
     // 월간 개별 합계 조회
+    // 수입
+    public Map<String, Integer> getMonthlyIncome(UserDetailsImpl userDetails) {
+        Long userId = userDetails.getId();
+
+        List<Income> incomeList = incomeRepository.findByUserId(userId);
+
+        Map<String, Integer> monthlyIncome = new LinkedHashMap<>();
+
+        for (Income income : incomeList) {
+            String incomeMonth = getMonthFromDate(income.getIncomeDate());
+            int incomeAmount = income.getIncomeAmount();
+
+            // 이미 해당 월의 합계가 계산되었는지 확인
+            if (monthlyIncome.containsKey(incomeMonth)) {
+                int currentTotal = monthlyIncome.get(incomeMonth);
+                monthlyIncome.put(incomeMonth, currentTotal + incomeAmount);
+            } else {
+                monthlyIncome.put(incomeMonth, incomeAmount);
+            }
+        }
+
+        return monthlyIncome;
+    }
 
 
+    // 지출
+    public Map<String, Integer> getMonthlyExpense(UserDetailsImpl userDetails) {
+        Long userId = userDetails.getId();
+
+        List<Expense> expenseList = expenseRepository.findByUserId(userId);
+
+        Map<String, Integer> monthlyExpense = new LinkedHashMap<>();
+
+        for (Expense expense : expenseList) {
+            String expenseMonth = getMonthFromDate(expense.getExpenseDate());
+            int expenseAmount = expense.getExpenseAmount();
+
+            // 이미 해당 월의 합계가 계산되었는지 확인
+            if (monthlyExpense.containsKey(expenseMonth)) {
+                int currentTotal = monthlyExpense.get(expenseMonth);
+                monthlyExpense.put(expenseMonth, currentTotal + expenseAmount);
+            } else {
+                monthlyExpense.put(expenseMonth, expenseAmount);
+            }
+        }
+
+        return monthlyExpense;
+    }
+
+    private String getMonthFromDate(String date) {
+        // 날짜 형식에 따라 파싱 및 월 정보 추출
+        return date.substring(5, 7);
+    }
 
 
+    // 월간 전체 합계
+    public Map<String, Integer> getMonthlyStatistics(UserDetailsImpl userDetails) {
+        Long userId = userDetails.getId();
+
+        Map<String, Integer> monthlyStatistics = new LinkedHashMap<>();
+
+        // 월간 수입 합계 계산
+        Map<String, Integer> monthlyIncome = getMonthlyIncome(userDetails);
+
+        // 월간 지출 합계 계산
+        Map<String, Integer> monthlyExpense = getMonthlyExpense(userDetails);
+
+        // 월별 합계 계산 및 합산
+        for (String month : monthlyIncome.keySet()) {
+            int incomeTotal = monthlyIncome.getOrDefault(month, 0);
+            int expenseTotal = monthlyExpense.getOrDefault(month, 0);
+            int total = incomeTotal - expenseTotal;
+            monthlyStatistics.put(month, total);
+        }
+
+        return monthlyStatistics;
+    }
 
 }
 
