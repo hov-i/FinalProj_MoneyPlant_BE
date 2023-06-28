@@ -36,5 +36,5 @@ out/
 ### VS Code ###
 .vscode/
 /resources/*.properties
-/resources/*.p12
+localhost.p12
 application.properties
