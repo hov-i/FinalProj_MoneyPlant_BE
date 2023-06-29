@@ -72,7 +72,7 @@ public class WorkService {
         for (Work work : workList) {
             WorkDto workDto = new WorkDto();
 
-            // 조회 내용 :  근무 날짜, 근무 이름, 근무 색깔
+            // 조회 내용 :  근무 날짜, 근무 이름, 근무 색
             workDto.setWorkDate(work.getWorkDate());
             workDto.setWorkName(work.getWorkName());
             workDto.setWorkColor(work.getWorkColor());
@@ -91,7 +91,7 @@ public class WorkService {
         for (Work work : workList) {
             WorkDto workDto = new WorkDto();
 
-            // 조회 내용 :  근무 날짜, 근무 이름, 근무 색깔
+            // 조회 내용 :  근무 날짜, 근무 이름, 근무 색
             workDto.setWorkName(work.getWorkName());
             workDto.setWorkColor(work.getWorkColor());
             workDto.setWorkDate(work.getWorkDate());

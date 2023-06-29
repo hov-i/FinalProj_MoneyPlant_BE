@@ -54,11 +54,11 @@ public class ScheduleService {
         }
     }
 
-    // 나의 일정 가져와서 등록하기
-
     // 캘린더 일정 수정
 
     // 캘린더 일정 삭제
+
+    // 구글캘린더에서 받아온 일정 수정하기 (예산 등록)
 
 
 // ===========================================================================
@@ -71,7 +71,7 @@ public class ScheduleService {
         for (Schedule schedule : scheduleList) {
             ScheduleDto scheduleDto = new ScheduleDto();
 
-            // 조회 내용 : 일정 날짜, 일정 이름, 일정 색깔
+            // 조회 내용 : 일정 날짜, 일정 이름, 일정 색
             scheduleDto.setScDate(schedule.getScDate());
             scheduleDto.setScName(schedule.getScName());
             scheduleDto.setScColor(schedule.getScColor());
@@ -90,7 +90,7 @@ public class ScheduleService {
         for (Schedule schedule : scheduleList) {
             ScheduleDto scheduleDto = new ScheduleDto();
 
-            // 조회 내용 : 일정 날짜, 일정 이름, 일정 색깔, 일정 예산
+            // 조회 내용 : 일정 날짜, 일정 이름, 일정 색, 일정 예산
             scheduleDto.setScDate(schedule.getScDate());
             scheduleDto.setScName(schedule.getScName());
             scheduleDto.setScColor(schedule.getScColor());

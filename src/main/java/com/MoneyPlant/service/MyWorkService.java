@@ -68,7 +68,7 @@ public class MyWorkService {
         for (MyWork myWork : myWorkList) {
             MyWorkDto myWorkDto = new MyWorkDto();
 
-            // 조회 내용 : 근무 이름, 근무 깔
+            // 조회 내용 : 근무 이름, 근무 색
             myWorkDto.setMyWorkName(myWork.getMyWorkName());
             myWorkDto.setMyWorkColor(myWork.getMyWorkColor());
 
