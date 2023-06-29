@@ -1,0 +1,17 @@
+package com.MoneyPlant.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
+
+@Getter
+@Setter
+@AllArgsConstructor
+public class CalendarDto {
+    private List<ScheduleDto> scheduleDtoList;
+    private List<WorkDto> workDtoList;
+//    private List<IncomeDto> incomeDtoList;
+//    private List<ExpenseDto> expenseDtoList;
+}

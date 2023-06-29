@@ -24,6 +24,7 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
 
     // 캘린더 일정 등록
+    @PostMapping("/create")
     public ResponseEntity<String> createSchedule(
             @RequestBody List<ScheduleDto> scheduleList,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
