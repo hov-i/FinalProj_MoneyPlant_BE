@@ -29,7 +29,7 @@ public class MyPageController {
     private final MyWorkService myWorkService;
 
     // 마이페이지 나의 일정 등록
-    @PostMapping("/create")
+    @PostMapping("/create-schedule")
     public ResponseEntity<String> createMySchedule(
             @RequestBody MyScheduleDto myScheduleDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -45,7 +45,7 @@ public class MyPageController {
 
 
     // 마이페이지 나의 근무 등록
-    @PostMapping("/create")
+    @PostMapping("/create-work")
     public ResponseEntity<String> createMyWork (
             @RequestBody MyWorkDto myWorkDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
