@@ -3,6 +3,7 @@ package com.MoneyPlant.service.jwt;
 import com.MoneyPlant.entity.User;
 import com.MoneyPlant.repository.UserRepository;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,16 +14,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
+@AllArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
-    @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
+
 
     // UserDetailsService 를 상속받아서 구현해줘야 하는 함수인데
     // 이메일 로그인이라서 loadUserByEmail을 따로 만들어줌
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return loadUserByEmail(username);
+    public UserDetailsImpl loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with email: " + email));
+
+        return UserDetailsImpl.build(user);
+
     }
 
     /**
@@ -33,9 +39,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      */
     @Transactional
     public UserDetails loadUserByEmail(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with email: " + email));
-
-        return UserDetailsImpl.build(user);
+        return loadUserByUsername(email);
     }
 }

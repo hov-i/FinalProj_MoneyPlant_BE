@@ -30,8 +30,8 @@ public class User {
     @Column(name = "social_provider", nullable = true)
     private String socialProvider;      // 소셜 종류 ex) google, kakao
 
-    @Column(name = "social_id", nullable = true)
-    private String socialId;            // 소셜 아이디 ex) gmail
+    @Column(name = "social_email", nullable = true)
+    private String socialEmail;            // 소셜 아이디 ex) gmail
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
