@@ -66,7 +66,7 @@ public class MyScheduleService {
         for (MySchedule mySchedule : myScheduleList) {
             MyScheduleDto myScheduleDto = new MyScheduleDto();
 
-            // 조회 내용 : 일정 이름, 일정 색깔
+            // 조회 내용 : 일정 이름, 일정 색
             myScheduleDto.setMyScName(mySchedule.getMyScName());
             myScheduleDto.setMyScColor(mySchedule.getMyScColor());
 

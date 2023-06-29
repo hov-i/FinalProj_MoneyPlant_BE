@@ -33,7 +33,8 @@ public class CalendarController {
     // 캘린더 가계부 추가, 삭제, 수정 ( )
 
 
-    // 캘린더 전체 일정 조회
+// ===========================================================================
+    // 캘린더 컨텐츠 전체 조회 (수입, 지출 추가 예정)
     @GetMapping("")
     public ResponseEntity<CalendarDto> CalendarView (@AuthenticationPrincipal UserDetailsImpl userDetails) throws IllegalAccessException {
         List<ScheduleDto> scheduleList = scheduleService.getScheduleForCal(userDetails);
@@ -43,5 +44,4 @@ public class CalendarController {
 
         return ResponseEntity.ok(calendarDto);
     }
-}
 }
