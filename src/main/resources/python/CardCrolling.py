@@ -29,7 +29,7 @@ def scrape_and_store_cards(url, category, num_iterations):
         descs = soup.select("p.desc")
         annual_fees = soup.select("i.annual_fee")
 
-        links = soup.select("a.anchor")
+        links = soup.select("a.apply")
         for link_tag in links:
             card_link = link_tag.get("href")
             card_links.append(card_link)
@@ -39,16 +39,16 @@ def scrape_and_store_cards(url, category, num_iterations):
             card_img = img_tag.get("src")
             card_imgs.append(card_img)
 
-        card_names = [element.text for element in names]
-        card_descs = [element.text for element in descs]
-        card_annual_fees = [element.text for element in annual_fees]
+        card_names = [element.text for element in names if "신용카드" not in element.text and "이벤트카드" not in element.text]
+        card_descs = [element.text for element in descs if "월 평균 카드사용" not in element.text]
+        card_annual_fees = [element.text for element in annual_fees if "신용카드" not in element.text and "이벤트카드" not in element.text]
 
         conn = pymysql.connect(host="127.0.0.1", user="MoneyPlant", password="1234", db="money_plant", charset="utf8")
         cursor = conn.cursor()
 
         for name, desc, img, link, annual_fee in zip(card_names, card_descs, card_imgs, card_links, card_annual_fees):
             query = "INSERT INTO card_list (card_name, card_category, card_desc, card_img, card_link, card_annual_fee) VALUES (%s, %s, %s, %s, %s, %s)"
-            values = (name, category, desc, img, 'https://card-search.naver.com'+link, annual_fee)
+            values = (name, category, desc, img, link, annual_fee)
             cursor.execute(query, values)
 
         conn.commit()

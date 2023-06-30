@@ -1,5 +1,6 @@
 package com.MoneyPlant.entity;
 
+import com.MoneyPlant.dto.CardDto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -34,4 +35,16 @@ public class CardList {
 
     @Column(length = 1000)
     private String cardAnnualFee;
+
+    public CardDto toCardDto() {
+        CardDto cardDto = new CardDto();
+        cardDto.setCardId(this.getCardId());
+        cardDto.setCardName(this.getCardName());
+        cardDto.setCardCategory(this.getCardCategory());
+        cardDto.setCardDesc(this.getCardDesc());
+        cardDto.setCardImg(this.getCardImg());
+        cardDto.setCardLink(this.getCardLink());
+        cardDto.setCardAnnualFee(this.getCardAnnualFee());
+        return cardDto;
+    }
 }
