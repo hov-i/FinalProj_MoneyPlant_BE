@@ -24,7 +24,6 @@ public class CalendarController {
     @Autowired
     private final ScheduleService scheduleService;
     private final WorkService workService;
-    private final LedgerService ledgerService;
 
     // 캘린더 정보 가져오기
 
@@ -37,10 +36,11 @@ public class CalendarController {
     // 캘린더 컨텐츠 전체 조회 (수입, 지출 추가 예정)
     @GetMapping("")
     public ResponseEntity<CalendarDto> CalendarView (@AuthenticationPrincipal UserDetailsImpl userDetails) throws IllegalAccessException {
-        List<ScheduleDto> scheduleList = scheduleService.getScheduleForCal(userDetails);
-        List<WorkDto> workList = workService.getWorkForCal(userDetails);
+        List<ScheduleDto> scheduleDtoList = scheduleService.getScheduleForCal(userDetails);
+        List<WorkDto> workDtoList = workService.getWorkForCal(userDetails);
 
-        CalendarDto calendarDto = new CalendarDto(scheduleList, workList);
+
+        CalendarDto calendarDto = new CalendarDto(scheduleDtoList, workDtoList);
 
         return ResponseEntity.ok(calendarDto);
     }
