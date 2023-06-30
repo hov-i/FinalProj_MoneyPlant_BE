@@ -1,7 +1,7 @@
 package com.MoneyPlant.controller;
 
 import com.MoneyPlant.dto.ScheduleDto;
-import com.MoneyPlant.service.ScheduleService;
+import com.MoneyPlant.service.CalendarService;
 import com.MoneyPlant.service.jwt.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +12,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @Slf4j
@@ -21,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequiredArgsConstructor
 public class ScheduleController {
     @Autowired
-    private final ScheduleService scheduleService;
+    private final CalendarService calendarService;
 
     // 캘린더 일정 등록
     @PostMapping("/create")
@@ -31,7 +30,7 @@ public class ScheduleController {
         boolean allSuccess = true;
 
         for (ScheduleDto scheduleDto : scheduleList) {
-            boolean isSuccess = scheduleService.createSchedule(scheduleDto, userDetails);
+            boolean isSuccess = calendarService.createSchedule(scheduleDto, userDetails);
 
             if (!isSuccess) {
                 allSuccess = false;

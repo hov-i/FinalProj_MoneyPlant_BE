@@ -1,6 +1,6 @@
 package com.MoneyPlant.service;
 
-import com.MoneyPlant.dto.ScheduleDto;
+import com.MoneyPlant.dto.*;
 import com.MoneyPlant.entity.*;
 import com.MoneyPlant.repository.*;
 import com.MoneyPlant.service.jwt.UserDetailsImpl;
@@ -23,8 +23,9 @@ import java.util.List;
 @Transactional
 @Slf4j
 @RequiredArgsConstructor
-public class ScheduleService {
+public class CalendarService {
     private final ScheduleRepository scheduleRepository;
+    private final WorkRepository workRepository;
     private final UserRepository userRepository;
 
     // 캘린더 일정 생성
@@ -54,9 +55,41 @@ public class ScheduleService {
         }
     }
 
-    // 캘린더 일정 수정
+    // 캘린더 근무 생성
+    public boolean createWork(WorkDto workDto, UserDetailsImpl userDetails) {
+        try {
+            Long userId = userDetails.getId();
+            workDto.setUserId(userId);
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
-    // 캘린더 일정 삭제
+            Work work = new Work();
+            work.setUser(user);
+            work.setWorkName(workDto.getWorkName());
+            work.setWorkColor(work.getWorkColor());
+            work.setPayType(workDto.getPayType());
+            work.setWorkMoney(workDto.getWorkMoney());
+            work.setWorkDate(workDto.getWorkDate());
+            work.setWorkTime(workDto.getWorkTime());
+            work.setWorkPay(workDto.getWorkPay());
+            work.setWorkTax(work.getWorkTax());
+            work.setPayDay(workDto.getPayDay());
+
+            workRepository.save(work);
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            return false;
+        }
+    }
+
+    // 마이페이지에서 나의 일정 & 근무 가져와서 등록하기
+
+    // 캘린더 일정/근무 수정
+
+    // 캘린더 일정/근무 삭제
 
     // 구글캘린더에서 받아온 일정 수정하기 (예산 등록)
 
@@ -81,6 +114,31 @@ public class ScheduleService {
         return scheduleDtoList;
     }
 
+    // 캘린더 전체 근무 조회 - 달력
+    public List<WorkDto> getWorkForCal(UserDetailsImpl userDetails) {
+        Long userId = userDetails.getId();
+        List<Work> workList = workRepository.findByUserId(userId);
+
+        List<WorkDto> workDtoList = new ArrayList<>();
+        for (Work work : workList) {
+            WorkDto workDto = new WorkDto();
+
+            // 조회 내용 :  근무 날짜, 근무 이름, 근무 색
+            work.setWorkName(workDto.getWorkName());
+            work.setWorkColor(work.getWorkColor());
+            work.setPayType(workDto.getPayType());
+            work.setWorkMoney(workDto.getWorkMoney());
+            work.setWorkDate(workDto.getWorkDate());
+            work.setWorkTime(workDto.getWorkTime());
+            work.setWorkPay(workDto.getWorkPay());
+            work.setWorkTax(work.getWorkTax());
+            work.setPayDay(workDto.getPayDay());
+
+            workDtoList.add(workDto);
+        }
+        return workDtoList;
+    }
+
     // 캘린더 전체 일정 조회 - 일별 상세
     public List<ScheduleDto> getScheduleForDetail(UserDetailsImpl userDetails) {
         Long userId = userDetails.getId();
@@ -99,5 +157,26 @@ public class ScheduleService {
             scheduleDtoList.add(scheduleDto);
         }
         return scheduleDtoList;
+    }
+
+    // 캘린더 전체 근무 조회 - 일별 상세
+    public List<WorkDto> getWorkForDetail(UserDetailsImpl userDetails) {
+        Long userId = userDetails.getId();
+        List<Work> workList = workRepository.findByUserId(userId);
+
+        List<WorkDto> workDtoList = new ArrayList<>();
+        for (Work work : workList) {
+            WorkDto workDto = new WorkDto();
+
+            // 조회 내용 :  근무 날짜, 근무 이름, 근무 색
+            workDto.setWorkName(work.getWorkName());
+            workDto.setWorkColor(work.getWorkColor());
+            workDto.setWorkDate(work.getWorkDate());
+            workDto.setWorkTime(work.getWorkTime());
+            workDto.setWorkPay(work.getWorkPay());
+
+            workDtoList.add(workDto);
+        }
+        return workDtoList;
     }
 }

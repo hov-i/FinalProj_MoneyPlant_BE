@@ -1,7 +1,7 @@
 package com.MoneyPlant.controller;
 
 import com.MoneyPlant.dto.WorkDto;
-import com.MoneyPlant.service.WorkService;
+import com.MoneyPlant.service.CalendarService;
 import com.MoneyPlant.service.jwt.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +12,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @Slf4j
@@ -21,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequiredArgsConstructor
 public class WorkController {
     @Autowired
-    private final WorkService workService;
+    private final CalendarService calendarService;
 
     // 캘린더 근무 등록
     @PostMapping("/create")
@@ -31,7 +30,7 @@ public class WorkController {
         boolean allSuccess = true;
 
         for (WorkDto workDto : workDtoList) {
-            boolean isSuccess = workService.createWork(workDto, userDetails);
+            boolean isSuccess = calendarService.createWork(workDto, userDetails);
 
             if(!isSuccess) {
                 allSuccess = false;

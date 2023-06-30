@@ -7,13 +7,11 @@ import com.MoneyPlant.service.jwt.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,8 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/calendar")
 public class CalendarController {
     @Autowired
-    private final ScheduleService scheduleService;
-    private final WorkService workService;
+    private final CalendarService calendarService;
+
 
     // 캘린더 정보 가져오기
 
@@ -36,9 +34,8 @@ public class CalendarController {
     // 캘린더 컨텐츠 전체 조회 (수입, 지출 추가 예정)
     @GetMapping("")
     public ResponseEntity<CalendarDto> CalendarView (@AuthenticationPrincipal UserDetailsImpl userDetails) throws IllegalAccessException {
-        List<ScheduleDto> scheduleDtoList = scheduleService.getScheduleForCal(userDetails);
-        List<WorkDto> workDtoList = workService.getWorkForCal(userDetails);
-
+        List<ScheduleDto> scheduleDtoList = calendarService.getScheduleForCal(userDetails);
+        List<WorkDto> workDtoList = calendarService.getWorkForCal(userDetails);
 
         CalendarDto calendarDto = new CalendarDto(scheduleDtoList, workDtoList);
 
