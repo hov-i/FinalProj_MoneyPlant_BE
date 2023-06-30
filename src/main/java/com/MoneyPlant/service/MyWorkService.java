@@ -32,19 +32,18 @@ public class MyWorkService {
         try {
             Long userId = userDetails.getId();
             myWorkDto.setUserId(userId);
-
             User user = userRepository.findById(userId)
                     .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
             MyWork myWork = new MyWork();
             myWork.setUser(user);
             myWork.setMyWorkName(myWorkDto.getMyWorkName());
-            myWork.setMyWorkColor(myWork.getMyWorkColor());
+            myWork.setMyWorkColor(myWorkDto.getMyWorkColor());
             myWork.setMyPayType(myWorkDto.getMyPayType());
-            myWork.setMyWorkMoney(myWork.getMyWorkMoney());
+            myWork.setMyWorkMoney(myWorkDto.getMyWorkMoney());
             myWork.setMyWorkTime(myWorkDto.getMyWorkTime());
             myWork.setMyWorkPay(myWorkDto.getMyWorkPay());
-            myWork.setMyWorkTax(myWork.getMyWorkTax());
+            myWork.setMyWorkTax(myWorkDto.getMyWorkTax());
             myWork.setMyPayDay(myWorkDto.getMyPayDay());
 
             myWorkRepository.save(myWork);

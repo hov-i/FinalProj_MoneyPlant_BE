@@ -38,7 +38,7 @@ public class MyScheduleService {
             MySchedule mySchedule = new MySchedule();
             mySchedule.setUser(user);
             mySchedule.setMyScName(myScheduleDto.getMyScName());
-            mySchedule.setMyScColor(mySchedule.getMyScColor());
+            mySchedule.setMyScColor(myScheduleDto.getMyScColor());
             mySchedule.setMyScBudget(myScheduleDto.getMyScBudget());
 
             myScheduleRepository.save(mySchedule);

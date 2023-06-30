@@ -38,7 +38,7 @@ public class MyPageController {
             boolean isSuccess = myScheduleService.createMySchedule(myScheduleDto, userDetails);
 
             if (isSuccess) {
-                return ResponseEntity.ok("근무가 생성되었습니다.");
+                return ResponseEntity.ok("일정이 생성되었습니다.");
             } else {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("근무 생성을 실패했습니다.");
             }
