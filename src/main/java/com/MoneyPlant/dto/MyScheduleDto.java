@@ -8,6 +8,6 @@ import lombok.Setter;
 public class MyScheduleDto {
     private Long userId; // join 으로 사용 예정
     private String myScName;
-    private String myScColor;
-    private String myScBudget;
+    private int myScColor;
+    private int myScBudget;
 }

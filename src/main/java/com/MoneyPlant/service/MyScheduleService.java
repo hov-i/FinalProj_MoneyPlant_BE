@@ -32,7 +32,6 @@ public class MyScheduleService {
         try {
             Long userId = userDetails.getId();
             myScheduleDto.setUserId(userId);
-
             User user = userRepository.findById(userId)
                     .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 

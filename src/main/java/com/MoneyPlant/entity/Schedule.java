@@ -28,12 +28,12 @@ public class Schedule { // 약어로 sc를 사용합니다.
     private String scName; // 일정 이름
 
     @Column(name = "sc_color", nullable = false)
-    private String scColor; // 일정 색
+    private int scColor; // 일정 색
 
     @Column(name = "sc_date", nullable = false)
     private String scDate; // 일정 날짜
 
     @Column(name = "sc_budget")
-    private String scBudget; // 일정 예산
+    private int scBudget; // 일정 예산
 
 }
