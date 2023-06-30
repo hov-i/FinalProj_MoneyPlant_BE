@@ -1,25 +1,17 @@
 package com.MoneyPlant.service;
 
 import com.MoneyPlant.constant.ERole;
-import com.MoneyPlant.dto.RoleDto;
 import com.MoneyPlant.dto.UserInfoResponse;
 import com.MoneyPlant.entity.Role;
-import com.MoneyPlant.entity.User;
 import com.MoneyPlant.repository.RoleRepository;
-import com.MoneyPlant.repository.UserRepository;
-import com.MoneyPlant.security.jwt.JwtUtils;
 import com.MoneyPlant.service.jwt.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
 @Transactional

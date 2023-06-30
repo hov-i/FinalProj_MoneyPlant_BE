@@ -54,7 +54,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 // 이메일 값으로 유저 정보 가져오기
                 UserDetailsImpl userDetails = userDetailsService.loadUserByUsername(email);
 
-                // UsernamePasswordAuthenticationToken( principal, credentias, authorities )
+                // UsernamePasswordAuthenticationToken( principal, credentials, authorities )
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(userDetails,
                                 null,
@@ -65,6 +65,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception e) {
+            System.out.println("doFilterInternal : 인증실패");
             logger.error("Cannot set user authentication: {}", e);
         }
 
