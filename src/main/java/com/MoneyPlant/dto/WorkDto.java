@@ -12,9 +12,10 @@ public class WorkDto {
     private String workName;
     private String workColor;
     private String payType;
+    private int workMoney;
     private String workDate;
     private int workTime;
     private int workPay;
-    private int payDay;
-
+    private int workTax;
+    private String payDay;
 }

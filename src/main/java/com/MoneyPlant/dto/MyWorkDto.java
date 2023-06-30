@@ -10,9 +10,10 @@ public class MyWorkDto {
     private String myWorkName;
     private String myWorkColor;
     private String myPayType;
-
+    private int myWorkMoney;
     private int myWorkTime;
+    private int myWorkTax;
     private int myWorkPay;
-    private int myPayDay;
+    private String myPayDay;
 
 }
