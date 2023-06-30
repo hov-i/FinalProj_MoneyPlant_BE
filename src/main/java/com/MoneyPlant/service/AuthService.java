@@ -105,8 +105,7 @@ public class AuthService {
                 .header(HttpHeaders.SET_COOKIE, jwtRefreshCookie.toString())
                 .body(new UserInfoResponse(userDetails.getId(),
                         userDetails.getName(),
-                        userDetails.getEmail(),
-                        role));
+                        userDetails.getEmail(), role));
     }
     // 로그아웃
     public ResponseEntity<?> signout() {

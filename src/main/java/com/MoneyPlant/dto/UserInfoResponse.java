@@ -13,5 +13,4 @@ public class UserInfoResponse {
     private String name;
     private String email;
     private String role;
-
 }

@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.MoneyPlant.service.jwt.UserDetailsImpl;
 import com.MoneyPlant.service.jwt.UserDetailsServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,10 +29,22 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
 
     // FilterChain : Filter는 클라이언트 요청부터 응답 받을 때까지 거쳐가는 작업들임 FilterChain은 그런 작업들을 모아서 체인처럼 해놓은것
+
+    /**
+     * 현재 사용자가 인증되면 UserDetailsImpl에 정보를 담아 SecurityContextHolder에 설정함.
+     * 현재 사용자 정보에 접근 시 SecurityContextHolder에서 다루면 됨
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         try {
+            String requestURI = request.getRequestURI();
+            if (requestURI.endsWith("/signup")) {
+                filterChain.doFilter(request, response);
+                return;
+            }
             // jwt의 value값 가져오기
             String jwt = parseJwt(request);
             // 토큰이 정상적으로 들어오는지 체크
@@ -39,16 +52,16 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 // 토큰으로 부터 이메일값 가져오기
                 String email = jwtUtils.getEmailFromJwtToken(jwt);
                 // 이메일 값으로 유저 정보 가져오기
-                UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+                UserDetailsImpl userDetails = userDetailsService.loadUserByUsername(email);
 
-                // UsernamepAsswordAuthenticationToken( principal, credentias, authorities )
+                // UsernamePasswordAuthenticationToken( principal, credentias, authorities )
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(userDetails,
                                 null,
                                 userDetails.getAuthorities());
                 // setDetails : Authentication 개체의 인증 요청에 대한 추가 세부 정보를 제공하는 데 사용됩니다
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                //
+                // 요청자의 정보를 SecurityContextHolder에 설정
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception e) {
