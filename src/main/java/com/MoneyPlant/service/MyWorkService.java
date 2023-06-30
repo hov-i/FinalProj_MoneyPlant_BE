@@ -41,8 +41,10 @@ public class MyWorkService {
             myWork.setMyWorkName(myWorkDto.getMyWorkName());
             myWork.setMyWorkColor(myWork.getMyWorkColor());
             myWork.setMyPayType(myWorkDto.getMyPayType());
+            myWork.setMyWorkMoney(myWork.getMyWorkMoney());
             myWork.setMyWorkTime(myWorkDto.getMyWorkTime());
             myWork.setMyWorkPay(myWorkDto.getMyWorkPay());
+            myWork.setMyWorkTax(myWork.getMyWorkTax());
             myWork.setMyPayDay(myWorkDto.getMyPayDay());
 
             myWorkRepository.save(myWork);
@@ -71,6 +73,12 @@ public class MyWorkService {
             // 조회 내용 : 근무 이름, 근무 색
             myWorkDto.setMyWorkName(myWork.getMyWorkName());
             myWorkDto.setMyWorkColor(myWork.getMyWorkColor());
+            myWork.setMyPayType(myWorkDto.getMyPayType());
+            myWork.setMyWorkMoney(myWork.getMyWorkMoney());
+            myWork.setMyWorkTime(myWorkDto.getMyWorkTime());
+            myWork.setMyWorkPay(myWorkDto.getMyWorkPay());
+            myWork.setMyWorkTax(myWork.getMyWorkTax());
+            myWork.setMyPayDay(myWorkDto.getMyPayDay());
 
             myWorkDtoList.add(myWorkDto);
         }
