@@ -17,7 +17,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(origins = "https://localhost:3000", allowedHeaders = "*")
 @RequestMapping("/calendar")
 public class CalendarController {
     @Autowired
@@ -26,7 +26,7 @@ public class CalendarController {
 
     // 캘린더 일정 추가, 삭제, 수정 ( 구글 연동 되어있으면 즉시 구글 캘린더에도 적용시켜주기 (금액쓰는 것도 있음) )
     // 캘린더 일정 등록
-    @PostMapping("/create")
+    @PostMapping("/create/schedual")
     public ResponseEntity<String> createSchedule(
             @RequestBody List<ScheduleDto> scheduleList,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -49,7 +49,7 @@ public class CalendarController {
     }
 
     // 캘린더 근무 등록
-    @PostMapping("/create")
+    @PostMapping("/create/work")
     public ResponseEntity<String> createWork(
             @RequestBody List<WorkDto> workDtoList,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
