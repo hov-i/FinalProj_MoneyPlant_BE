@@ -130,8 +130,8 @@ public class CalendarService {
             work.setWorkMoney(workDto.getWorkMoney());
             work.setWorkDate(workDto.getWorkDate());
             work.setWorkTime(workDto.getWorkTime());
-            work.setWorkPay(workDto.getWorkPay());
             work.setWorkTax(work.getWorkTax());
+            work.setWorkPay(workDto.getWorkPay());
             work.setPayDay(workDto.getPayDay());
 
             workDtoList.add(workDto);

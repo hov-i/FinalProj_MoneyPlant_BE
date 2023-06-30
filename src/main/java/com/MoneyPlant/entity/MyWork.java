@@ -40,7 +40,7 @@ public class MyWork {
     private int myWorkPay; // 급여 (월급이나 일급일 때만, 직접 작성)
 
     @Column(name = "my_work_tax")
-    private int myWorkTax; // 급여 세금
+    private double myWorkTax; // 급여 세금
 
     @Column(name = "my_pay_day", nullable = false)
     private String myPayDay; // 급여 지급일

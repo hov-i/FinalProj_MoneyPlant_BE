@@ -42,8 +42,8 @@ public class MyWorkService {
             myWork.setMyPayType(myWorkDto.getMyPayType());
             myWork.setMyWorkMoney(myWorkDto.getMyWorkMoney());
             myWork.setMyWorkTime(myWorkDto.getMyWorkTime());
-            myWork.setMyWorkPay(myWorkDto.getMyWorkPay());
             myWork.setMyWorkTax(myWorkDto.getMyWorkTax());
+            myWork.setMyWorkPay(myWorkDto.getMyWorkPay());
             myWork.setMyPayDay(myWorkDto.getMyPayDay());
 
             myWorkRepository.save(myWork);
@@ -75,8 +75,8 @@ public class MyWorkService {
             myWork.setMyPayType(myWorkDto.getMyPayType());
             myWork.setMyWorkMoney(myWork.getMyWorkMoney());
             myWork.setMyWorkTime(myWorkDto.getMyWorkTime());
-            myWork.setMyWorkPay(myWorkDto.getMyWorkPay());
             myWork.setMyWorkTax(myWork.getMyWorkTax());
+            myWork.setMyWorkPay(myWorkDto.getMyWorkPay());
             myWork.setMyPayDay(myWorkDto.getMyPayDay());
 
             myWorkDtoList.add(myWorkDto);

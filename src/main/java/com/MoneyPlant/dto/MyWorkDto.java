@@ -12,7 +12,7 @@ public class MyWorkDto {
     private String myPayType;
     private int myWorkMoney;
     private int myWorkTime;
-    private int myWorkTax;
+    private double myWorkTax;
     private int myWorkPay;
     private String myPayDay;
 

@@ -43,7 +43,7 @@ public class Work {
     private int workPay; // 급여 (월급이나 일급일 때만, 직접 작성)
 
     @Column(name = "work_tax")
-    private int workTax; // 급여 세금
+    private double workTax; // 급여 세금
 
     @Column(name = "pay_day", nullable = false)
     private String payDay; // 급여 지급일

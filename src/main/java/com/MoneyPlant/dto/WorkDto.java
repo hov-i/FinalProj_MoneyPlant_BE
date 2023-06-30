@@ -16,6 +16,6 @@ public class WorkDto {
     private String workDate;
     private int workTime;
     private int workPay;
-    private int workTax;
+    private double workTax;
     private String payDay;
 }
