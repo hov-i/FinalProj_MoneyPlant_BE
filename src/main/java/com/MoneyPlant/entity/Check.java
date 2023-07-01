@@ -8,7 +8,7 @@ import lombok.ToString;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "check")
+@Table(name = "list")
 @Getter @Setter
 @ToString
 //카테고리 아이디 외래키로 참조
