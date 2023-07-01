@@ -12,11 +12,11 @@ import javax.persistence.*;
 @Getter @Setter
 @ToString
 //카테고리 아이디 외래키로 참조
-public class List {
+public class Check {
     @Id
-    @Column(name = "list_id")
+    @Column(name = "check_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long listId;
+    private Long checkId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
