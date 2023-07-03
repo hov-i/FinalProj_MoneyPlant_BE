@@ -70,12 +70,12 @@ public class MyWorkService {
             MyWorkDto myWorkDto = new MyWorkDto();
 
             // 조회 내용 : 근무 이름, 근무 색
-            myWorkDto.setMyWorkName(myWork.getMyWorkName());
-            myWorkDto.setMyWorkColor(myWork.getMyWorkColor());
+            myWork.setMyWorkName(myWorkDto.getMyWorkName());
+            myWork.setMyWorkColor(myWorkDto.getMyWorkColor());
             myWork.setMyPayType(myWorkDto.getMyPayType());
-            myWork.setMyWorkMoney(myWork.getMyWorkMoney());
+            myWork.setMyWorkMoney(myWorkDto.getMyWorkMoney());
             myWork.setMyWorkTime(myWorkDto.getMyWorkTime());
-            myWork.setMyWorkTax(myWork.getMyWorkTax());
+            myWork.setMyWorkTax(myWorkDto.getMyWorkTax());
             myWork.setMyWorkPay(myWorkDto.getMyWorkPay());
             myWork.setMyPayDay(myWorkDto.getMyPayDay());
 
