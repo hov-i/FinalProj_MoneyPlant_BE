@@ -70,7 +70,6 @@ public class MyWorkService {
             MyWorkDto myWorkDto = new MyWorkDto();
 
             // 조회 내용 : 근무 이름, 근무 색
-            myWorkDto.setUserId(userId);
             myWorkDto.setMyWorkName(myWork.getMyWorkName());
             myWorkDto.setMyColor(myWork.getMyColor());
             myWorkDto.setMyPayType(myWork.getMyPayType());

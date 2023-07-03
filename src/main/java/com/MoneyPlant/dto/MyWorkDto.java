@@ -11,9 +11,9 @@ public class MyWorkDto {
     private int myColor;
     private String myPayType;
     private int myWorkMoney;
-    private int myWorkTime;
+    private double myWorkTime;
     private double myWorkTax;
-    private int myWorkPay;
+    private double myWorkPay;
     private String myPayDay;
 
 }

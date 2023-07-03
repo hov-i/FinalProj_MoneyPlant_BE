@@ -14,8 +14,8 @@ public class WorkDto {
     private String payType;
     private int workMoney;
     private String workDate;
-    private int workTime;
-    private int workPay;
+    private double workTime;
+    private double workPay;
     private double workTax;
     private String payDay;
 }

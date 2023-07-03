@@ -28,16 +28,16 @@ public class MyWork {
     private int myColor; // 근무 색
 
     @Column(name = "my_pay_type", nullable = false)
-    private String myPayType; // 급여 타입 : 건별, 주급, 월급
+    private String myPayType; // 급여 타입 : 건별, 시간제
 
-    @Column(name = "my_work_money")
-    private int myWorkMoney; // 시급, 일급
+    @Column(name = "my_work_money", nullable = false)
+    private int myWorkMoney; // 시급, 일급, 주급, 월급
 
     @Column(name = "my_work_time")
-    private int myWorkTime; // 근무 시간
+    private double myWorkTime; // 근무 시간
 
     @Column(name = "my_work_pay")
-    private int myWorkPay; // 급여 (월급이나 일급일 때만, 직접 작성)
+    private double myWorkPay; // 급여 (월급이나 일급일 때만, 직접 작성)
 
     @Column(name = "my_work_tax")
     private double myWorkTax; // 급여 세금
