@@ -10,10 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 
 @Service
@@ -312,10 +311,21 @@ public class LedgerService {
     }
 
     private String getMonthFromDate(String date) {
-        // 날짜 형식에 따라 파싱 및 월 정보 추출
-        return date.substring(5, 7);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date parsedDate;
+        try {
+            parsedDate = format.parse(date);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(parsedDate);
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH) + 1;
+            return year + "-" + month;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            // 월 값을 추출할 수 없는 경우 예외 처리
+            return "";
+        }
     }
-
 
     // 월간 전체 합계
     public Map<String, Integer> getMonthlyStatistics(UserDetailsImpl userDetails) {
@@ -325,12 +335,18 @@ public class LedgerService {
 
         // 월간 수입 합계 계산
         Map<String, Integer> monthlyIncome = getMonthlyIncome(userDetails);
+        if (monthlyIncome == null) {
+            monthlyIncome = new HashMap<>();
+        }
 
         // 월간 지출 합계 계산
         Map<String, Integer> monthlyExpense = getMonthlyExpense(userDetails);
+        if (monthlyExpense == null) {
+            monthlyExpense = new HashMap<>();
+        }
 
         // 월별 합계 계산 및 합산
-        for (String month : monthlyIncome.keySet()) {
+        for (String month : monthlyExpense.keySet()) {
             int incomeTotal = monthlyIncome.getOrDefault(month, 0);
             int expenseTotal = monthlyExpense.getOrDefault(month, 0);
             int total = incomeTotal - expenseTotal;
@@ -339,6 +355,7 @@ public class LedgerService {
 
         return monthlyStatistics;
     }
+
 
 }
 

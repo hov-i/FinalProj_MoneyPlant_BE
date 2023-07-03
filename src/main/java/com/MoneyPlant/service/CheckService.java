@@ -5,15 +5,16 @@ import com.MoneyPlant.dto.IncomeDto;
 import com.MoneyPlant.entity.*;
 import com.MoneyPlant.repository.*;
 import com.MoneyPlant.service.jwt.UserDetailsImpl;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +24,12 @@ public class CheckService {
     private final IncomeRepository incomeRepository;
     private final ExpenseRepository expenseRepository;
     private final CategoryRepository categoryRepository;
+
+    @Getter @Setter
+    public class TransactionDto {
+        private List<IncomeDto> incomeList;
+        private List<ExpenseDto> expenseList;
+    }
 
     // 수입&카테고리 조회
     public List<IncomeDto> getIncomeWithCategory(UserDetailsImpl userDetails) {
@@ -59,7 +66,7 @@ public class CheckService {
         List<ExpenseDto> expenseDtoList = new ArrayList<>();
         for (Expense expense : expenseList) {
             ExpenseDto expenseDto = new ExpenseDto();
-            expenseDto.setCategoryId(expense.getExpenseId());
+            expenseDto.setExpenseId(expense.getExpenseId());
             expenseDto.setExpenseAmount(expense.getExpenseAmount());
             expenseDto.setExpenseDate(expense.getExpenseDate());
             expenseDto.setExpenseContent(expense.getExpenseContent());
@@ -75,7 +82,25 @@ public class CheckService {
         return expenseDtoList;
     }
 
-    //월간 지출 카테고리별 합계
+
+    //월간 지출 카테고리별 합계(해당 월만 보여줍니다)
+    private String getMonthFromDate(String date) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date parsedDate;
+        try {
+            parsedDate = format.parse(date);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(parsedDate);
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH) + 1;
+            return year + "_" + month;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            // 월 값을 추출할 수 없는 경우 예외 처리
+            return "";
+        }
+    }
+
     public Map<String, Double> getExpenseSumByCategory(UserDetailsImpl userDetails) {
         Long userId = userDetails.getId();
         log.info("사용자 아이디: " + userId);
@@ -87,11 +112,28 @@ public class CheckService {
             String categoryName = expense.getCategory().getCategoryName();
             double expenseAmount = expense.getExpenseAmount();
 
-            categoryExpenseMap.put(categoryName, categoryExpenseMap.getOrDefault(categoryName, 0.0) + expenseAmount);
+            // 현재 년도와 월을 키에 추가합니다.
+            String currentYearMonth = getCurrentYear() + "_" + getCurrentMonth();
+            String key = categoryName + "_" + currentYearMonth;
+
+            // 카테고리별 월별 지출 합계에 누적하여 합산
+            categoryExpenseMap.put(key, categoryExpenseMap.getOrDefault(key, 0.0) + expenseAmount);
         }
 
         return categoryExpenseMap;
     }
+
+    private int getCurrentYear() {
+        Calendar calendar = Calendar.getInstance();
+        return calendar.get(Calendar.YEAR);
+    }
+
+    private int getCurrentMonth() {
+        Calendar calendar = Calendar.getInstance();
+        return calendar.get(Calendar.MONTH) + 1;
+    }
+
+
 
 }
 
