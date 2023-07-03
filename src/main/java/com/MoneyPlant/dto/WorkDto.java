@@ -10,7 +10,7 @@ public class WorkDto {
 //    private Long workId;
     private Long userId; // join 으로 사용 예정
     private String workName;
-    private int workColor;
+    private int color;
     private String payType;
     private int workMoney;
     private String workDate;

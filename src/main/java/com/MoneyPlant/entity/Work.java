@@ -25,7 +25,7 @@ public class Work {
     private String workName; // 근무 이름
 
     @Column(name = "work_color", nullable = false)
-    private int workColor; // 근무 색
+    private int color; // 근무 색
 
     @Column(name = "pay_type", nullable = false)
     private String payType; // // 급여 타입 : 건별, 주급, 월급

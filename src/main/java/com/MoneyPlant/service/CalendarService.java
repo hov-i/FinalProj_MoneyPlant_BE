@@ -42,7 +42,7 @@ public class CalendarService {
             schedule.setUser(user);
             schedule.setCalId(scheduleDto.getCalId());
             schedule.setScName(scheduleDto.getScName());
-            schedule.setScColor(scheduleDto.getScColor());
+            schedule.setColor(scheduleDto.getColor());
             schedule.setScDate(scheduleDto.getScDate());
             schedule.setScBudget(scheduleDto.getScBudget());
 
@@ -66,7 +66,7 @@ public class CalendarService {
             Work work = new Work();
             work.setUser(user);
             work.setWorkName(workDto.getWorkName());
-            work.setWorkColor(work.getWorkColor());
+            work.setColor(work.getColor());
             work.setPayType(workDto.getPayType());
             work.setWorkMoney(workDto.getWorkMoney());
             work.setWorkDate(workDto.getWorkDate());
@@ -107,7 +107,7 @@ public class CalendarService {
             // 조회 내용 : 일정 날짜, 일정 이름, 일정 색
             scheduleDto.setScDate(schedule.getScDate());
             scheduleDto.setScName(schedule.getScName());
-            scheduleDto.setScColor(schedule.getScColor());
+            scheduleDto.setColor(schedule.getColor());
 
             scheduleDtoList.add(scheduleDto);
         }
@@ -125,7 +125,7 @@ public class CalendarService {
 
             // 조회 내용 :  근무 날짜, 근무 이름, 근무 색
             work.setWorkName(workDto.getWorkName());
-            work.setWorkColor(work.getWorkColor());
+            work.setColor(work.getColor());
             work.setPayType(workDto.getPayType());
             work.setWorkMoney(workDto.getWorkMoney());
             work.setWorkDate(workDto.getWorkDate());
@@ -151,7 +151,7 @@ public class CalendarService {
             // 조회 내용 : 일정 날짜, 일정 이름, 일정 색, 일정 예산
             scheduleDto.setScDate(schedule.getScDate());
             scheduleDto.setScName(schedule.getScName());
-            scheduleDto.setScColor(schedule.getScColor());
+            scheduleDto.setColor(schedule.getColor());
             scheduleDto.setScBudget(schedule.getScBudget());
 
             scheduleDtoList.add(scheduleDto);
@@ -170,7 +170,7 @@ public class CalendarService {
 
             // 조회 내용 :  근무 날짜, 근무 이름, 근무 색
             workDto.setWorkName(work.getWorkName());
-            workDto.setWorkColor(work.getWorkColor());
+            workDto.setColor(work.getColor());
             workDto.setWorkDate(work.getWorkDate());
             workDto.setWorkTime(work.getWorkTime());
             workDto.setWorkPay(work.getWorkPay());

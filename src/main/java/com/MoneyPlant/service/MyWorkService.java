@@ -38,7 +38,7 @@ public class MyWorkService {
             MyWork myWork = new MyWork();
             myWork.setUser(user);
             myWork.setMyWorkName(myWorkDto.getMyWorkName());
-            myWork.setMyWorkColor(myWorkDto.getMyWorkColor());
+            myWork.setMyColor(myWorkDto.getMyColor());
             myWork.setMyPayType(myWorkDto.getMyPayType());
             myWork.setMyWorkMoney(myWorkDto.getMyWorkMoney());
             myWork.setMyWorkTime(myWorkDto.getMyWorkTime());
@@ -72,7 +72,7 @@ public class MyWorkService {
             // 조회 내용 : 근무 이름, 근무 색
             myWorkDto.setUserId(userId);
             myWorkDto.setMyWorkName(myWork.getMyWorkName());
-            myWorkDto.setMyWorkColor(myWork.getMyWorkColor());
+            myWorkDto.setMyColor(myWork.getMyColor());
             myWorkDto.setMyPayType(myWork.getMyPayType());
             myWorkDto.setMyWorkMoney(myWork.getMyWorkMoney());
             myWorkDto.setMyWorkTime(myWork.getMyWorkTime());

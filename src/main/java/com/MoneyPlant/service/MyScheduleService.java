@@ -38,7 +38,7 @@ public class MyScheduleService {
             MySchedule mySchedule = new MySchedule();
             mySchedule.setUser(user);
             mySchedule.setMyScName(myScheduleDto.getMyScName());
-            mySchedule.setMyScColor(myScheduleDto.getMyScColor());
+            mySchedule.setMyColor(myScheduleDto.getMyColor());
             mySchedule.setMyScBudget(myScheduleDto.getMyScBudget());
 
             myScheduleRepository.save(mySchedule);
@@ -67,7 +67,7 @@ public class MyScheduleService {
 
             // 조회 내용 : 일정 이름, 일정 색
             myScheduleDto.setMyScName(mySchedule.getMyScName());
-            myScheduleDto.setMyScColor(mySchedule.getMyScColor());
+            myScheduleDto.setMyColor(mySchedule.getMyColor());
 
             myScheduleDtoList.add(myScheduleDto);
         }

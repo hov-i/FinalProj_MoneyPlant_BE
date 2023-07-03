@@ -8,7 +8,7 @@ import lombok.Setter;
 public class MyWorkDto {
     private Long userId; // join 으로 사용 예정
     private String myWorkName;
-    private int myWorkColor;
+    private int myColor;
     private String myPayType;
     private int myWorkMoney;
     private int myWorkTime;

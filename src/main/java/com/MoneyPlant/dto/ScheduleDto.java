@@ -11,7 +11,7 @@ public class ScheduleDto {
     private Long userId; // join 으로 사용 예정
     private String calId;
     private String scName;
-    private int scColor;
+    private int color;
     private String scDate;
     private int scBudget;
 
