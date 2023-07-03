@@ -14,7 +14,7 @@ public class Expense {
     @Id
     @Column(name = "expense_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long ExpenseId; // 지출 Id
+    private Long expenseId; // 지출 Id
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")

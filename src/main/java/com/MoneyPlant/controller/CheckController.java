@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,6 +44,14 @@ public class CheckController {
         List<ExpenseDto> expenseDtoList = checkService.getExpenseWithCategory(userDetails);
         return ResponseEntity.ok(expenseDtoList);
     }
+
+    // 수입&지출 카테고리 통합 조회
+//    @GetMapping("/category")
+//    public ResponseEntity<CheckService.TransactionDto> getTransactionsWithCategory(Authentication authentication) {
+//        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+//        CheckService.TransactionDto transactionDto = checkService.getTransactionsWithCategory(userDetails);
+//        return ResponseEntity.ok(transactionDto);
+//    }
 
 
     //월간 지출 카테고리별 합계
