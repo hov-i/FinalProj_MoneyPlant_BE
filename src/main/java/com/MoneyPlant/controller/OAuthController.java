@@ -19,7 +19,7 @@ import java.net.URLEncoder;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(origins = "https://localhost:3000", allowedHeaders = "*")
 @RequestMapping("/auth")
 public class OAuthController {
     private final OAuthService oAuthService;
@@ -39,8 +39,6 @@ public class OAuthController {
     public ResponseEntity<?> callback(
                                       @RequestParam(name = "code") String code) throws JsonProcessingException {
 
-
-        GetGoogleOAuthRes getSocialOauthRes =oAuthService.OAuthLogin(code);
-        return new ResponseEntity<>(getSocialOauthRes, HttpStatus.OK);
+        return oAuthService.OAuthLogin(code);
     }
 }

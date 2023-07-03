@@ -93,7 +93,9 @@ public class GoogleOAuth implements SocialOAuth{
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
 
-        // bearer 이슈가 있었습니다.
+        // bearer 이슈
+        // 우리 토큰은 쿠키로 넘기기 때문에 bearer인증이 필요가 없지만
+        // 이렇게 헤더에 담아서 보낼때는 bearer를 명시해줘야 합니다.
         // postman 에서 안찍어도 넘어오길래 restTemplate 도 그냥 헤더로 넘겼더니 401에러가 발생하네요
         // HttpEntity를 선언하기 전에 setBearerAuth를 통해 Bearer 설정을 해줍시다.
         // 아니면 HttpEntity 선언 후 헤더에 토큰 값을 넣을 때 앞에 Bearer를 추가해서 넣으셔도 됩니다.

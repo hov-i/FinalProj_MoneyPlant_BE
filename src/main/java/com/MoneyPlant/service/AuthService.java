@@ -30,6 +30,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 
+// AuthService 는 인증에 관한 서비스만 제공해야하지 않을까??
+// 인증은? 토큰 등록, 토큰 발급, 토큰 갱신, 토큰 삭제 같은거
+// userRepository.save()를 분리하면 어떨까
+// OAuth에도 써야하는데
+
 
 @Service
 @RequiredArgsConstructor

@@ -1,57 +1,84 @@
 package com.MoneyPlant.service;
 
 import com.MoneyPlant.config.GoogleOAuth;
+import com.MoneyPlant.constant.ERole;
 import com.MoneyPlant.dto.GetGoogleOAuthRes;
 import com.MoneyPlant.dto.GoogleOAuthToken;
 import com.MoneyPlant.dto.GoogleUser;
+import com.MoneyPlant.dto.UserInfoResponse;
+import com.MoneyPlant.entity.RefreshToken;
+import com.MoneyPlant.entity.Role;
+import com.MoneyPlant.entity.User;
+import com.MoneyPlant.repository.RoleRepository;
+import com.MoneyPlant.repository.UserRepository;
+import com.MoneyPlant.security.jwt.JwtUtils;
+import com.MoneyPlant.service.jwt.RefreshTokenService;
+import com.MoneyPlant.service.jwt.UserDetailsImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-
+import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class OAuthService {
 
-    // 다른 OAuth 인증이 필요하면 타입 걸러주는 함수 필요합니다
-    // SocialOAuth 인터페이스를 상속받아 다른 소셜 OAuth 만들고 해당하는 로직 구현
     private final GoogleOAuth socialOAuth;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final JwtUtils jwtUtils;
+    private final RefreshTokenService refreshTokenService;
 
     public String request() throws IOException {
-        String redirectURL;
-        redirectURL=socialOAuth.getOAuthRedirectURL();
+        String redirectURL = socialOAuth.getOAuthRedirectURL();
         return redirectURL;
     }
 
-    public GetGoogleOAuthRes OAuthLogin(String code) throws JsonProcessingException {
-        ResponseEntity<String> accessToken =socialOAuth.requestAccessToken(code);
+    public ResponseEntity<?> OAuthLogin(String code) throws JsonProcessingException {
+        ResponseEntity<String> accessToken = socialOAuth.requestAccessToken(code);
+        GoogleOAuthToken googleOAuthToken = socialOAuth.getAccessToken(accessToken);
+        ResponseEntity<String> userInfoResponse = socialOAuth.requestUserInfo(googleOAuthToken);
 
-        GoogleOAuthToken googleOAuthToken =socialOAuth.getAccessToken(accessToken);
+        GoogleUser googleUser = socialOAuth.getUserInfo(userInfoResponse);
 
-        ResponseEntity<String> userInfoResponse=socialOAuth.requestUserInfo(googleOAuthToken);
-        System.out.println("requestUserInfo 완료");
+        Optional<User> optionalUser = userRepository.findByEmail(googleUser.getEmail());
+        System.out.println("optionalUser.isEmpty : " + optionalUser.isEmpty());
+        if (optionalUser.isEmpty()) {
+            User user = new User();
+            System.out.println("=====User 객체 생성======");
+            user.setEmail(googleUser.getEmail());
+            System.out.println("구글 이메일 : " + googleUser.getEmail());
+            user.setSocialEmail(googleUser.getEmail());
+            user.setSocialProvider("GOOGLE");
+            user.setName(googleUser.getName());
+            System.out.println("이름 : " + googleUser.getName());
+            Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            user.setRole(userRole);
+            userRepository.save(user);
+            optionalUser = Optional.of(user);
+        }
 
-        GoogleUser googleUser =socialOAuth.getUserInfo(userInfoResponse);
-        System.out.println("getUserInfo 완료");
+        User user = optionalUser.get();
 
-        // 여기까지 하면 토큰으로 유저정보 가져오기 까지 한 것
-        // 왜 유저정보를 가져왔나?
+        UserDetailsImpl userDetails = UserDetailsImpl.build(user);
 
-        String user_id = googleUser.getEmail();
-        System.out.println(user_id);
+        ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
 
-        // 이 이메일 값으로 DB에 있는 값과 비교
-        // 없으면 신규 회원으로 가입시키고
-        // 있으면 로그인 인증이 된 것이죠
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
 
-        // 로그아웃하면 access token이랑 refresh token 없애버려야함
-        // 서버 db에는 access token, refresh token email 정보만
+        ResponseCookie jwtRefreshCookie = jwtUtils.generateRefreshJwtCookie(refreshToken.getToken());
 
-        // 일반 로그인도 구현하면
-        // jwt 구현해야할텐데
-
-        return new GetGoogleOAuthRes("1234",1,"asdf", googleOAuthToken.getToken_type());
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                .header(HttpHeaders.SET_COOKIE, jwtRefreshCookie.toString())
+                .header(HttpHeaders.LOCATION, "https://localhost:3000")
+                .build();
     }
 }

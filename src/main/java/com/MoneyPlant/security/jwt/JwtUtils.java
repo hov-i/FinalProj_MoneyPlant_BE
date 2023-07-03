@@ -157,7 +157,7 @@ public class JwtUtils {
      * generateCookie는 파라미터를 받아 쿠키로 만드는 함수입니다
      * @param name 쿠키의 이름
      * @param value 쿠키의 값
-     * @param path 경로 ( 해당 주소값에 위치하면 쿠키 전송 )
+     * @param path 경로 ( 해당 주소값에 쿠키 전송 )
      * @return ResponseCookie
      * ResponseCookie는 쿠키
      */

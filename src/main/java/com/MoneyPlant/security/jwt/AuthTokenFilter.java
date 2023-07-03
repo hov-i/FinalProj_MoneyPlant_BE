@@ -41,7 +41,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         try {
             String requestURI = request.getRequestURI();
-            if (requestURI.endsWith("/signup")) {
+            if (requestURI.endsWith("/signup") || requestURI.endsWith("/google")) {
                 filterChain.doFilter(request, response);
                 return;
             }
