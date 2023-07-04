@@ -1,5 +1,7 @@
 package com.MoneyPlant.service;
 
+import com.MoneyPlant.dto.CategoryDto;
+import com.MoneyPlant.dto.CategoryIncomeDto;
 import com.MoneyPlant.dto.ExpenseDto;
 import com.MoneyPlant.dto.IncomeDto;
 import com.MoneyPlant.entity.*;
@@ -9,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,6 +28,33 @@ public class LedgerService {
     private final ExpenseRepository expenseRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
+    private final CategoryIncomeRepository categoryIncomeRepository;
+
+    @PostConstruct
+    public void insertCategoryIncomeData() {
+
+        String[] categoryIncomeNames = {
+                "급여",
+                "보너스",
+                "용돈",
+                "부수입",
+                "기타"
+        };
+
+        for (int i = 0; i < categoryIncomeNames.length; i++) {
+            CategoryIncomeDto categoryIncomeDto = new CategoryIncomeDto();
+            categoryIncomeDto.setCategoryIncomeId(Long.valueOf(i + 1));
+            categoryIncomeDto.setCategoryIncomeName(categoryIncomeNames[i]);
+
+            CategoryIncome categoryIncome = new CategoryIncome();
+            categoryIncome.setCategoryIncomeId(categoryIncomeDto.getCategoryIncomeId());
+            categoryIncome.setCategoryIncomeName(categoryIncomeDto.getCategoryIncomeName());
+
+            categoryIncomeRepository.save(categoryIncome);
+        }
+        System.out.println("CategoryIncome 초기값 저장 완료");
+    }
+
 
     //등록
     //----------------------------------------------------------
@@ -36,13 +66,13 @@ public class LedgerService {
         try {
             User user = userRepository.findById(userId)
                     .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-            Long categoryId = Long.valueOf(incomeDto.getCategoryId());
-            Category category = categoryRepository.findById(categoryId)
+            Long categoryIncomeId = Long.valueOf(incomeDto.getCategoryIncomeId());
+            CategoryIncome categoryIncome = categoryIncomeRepository.findById(categoryIncomeId)
                     .orElseThrow(() -> new RuntimeException("카테고리를 찾을 수 없습니다."));
 
             Income income = new Income();
             income.setUser(user);
-            income.setCategory(category);
+            income.setCategoryIncome(categoryIncome);
             income.setIncomeAmount(incomeDto.getIncomeAmount());
             income.setIncomeDate(incomeDto.getIncomeDate());
             income.setIncomeContent(incomeDto.getIncomeContent());
@@ -94,12 +124,12 @@ public class LedgerService {
             User user = userRepository.findById(updatedIncomeDto.getUserId())
                     .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
-            Category category = categoryRepository.findById(updatedIncomeDto.getCategoryId())
+            CategoryIncome categoryIncome = categoryIncomeRepository.findById(updatedIncomeDto.getCategoryIncomeId())
                     .orElseThrow(() -> new RuntimeException("카테고리를 찾을 수 없습니다."));
 
             // 수정할 필드 업데이트
             income.setUser(user);
-            income.setCategory(category);
+            income.setCategoryIncome(categoryIncome);
             income.setIncomeAmount(updatedIncomeDto.getIncomeAmount());
             income.setIncomeDate(updatedIncomeDto.getIncomeDate());
             income.setIncomeContent(updatedIncomeDto.getIncomeContent());

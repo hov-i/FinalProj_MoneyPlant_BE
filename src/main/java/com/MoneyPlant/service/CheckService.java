@@ -24,6 +24,7 @@ public class CheckService {
     private final IncomeRepository incomeRepository;
     private final ExpenseRepository expenseRepository;
     private final CategoryRepository categoryRepository;
+    private final CategoryIncomeRepository categoryIncomeRepository;
 
     @Getter @Setter
     public class TransactionDto {
@@ -44,11 +45,11 @@ public class CheckService {
             incomeDto.setIncomeAmount(income.getIncomeAmount());
             incomeDto.setIncomeDate(income.getIncomeDate());
             incomeDto.setIncomeContent(income.getIncomeContent());
-            incomeDto.setCategoryId(income.getCategory().getCategoryId());
+            incomeDto.setCategoryIncomeId(income.getCategoryIncome().getCategoryIncomeId());
             incomeDto.setUserId(income.getUser().getId());
 
-            String categoryName = categoryRepository.findByCategoryId(income.getCategory().getCategoryId()).getCategoryName();
-            incomeDto.setCategoryName(categoryName);
+            String categoryIncomeName = categoryIncomeRepository.findByCategoryIncomeId(income.getCategoryIncome().getCategoryIncomeId()).getCategoryIncomeName();
+            incomeDto.setCategoryIncomeName(categoryIncomeName);
 
             incomeDtoList.add(incomeDto);
         }

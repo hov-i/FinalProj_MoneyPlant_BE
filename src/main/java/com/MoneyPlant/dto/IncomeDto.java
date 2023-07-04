@@ -15,6 +15,6 @@ public class IncomeDto {
     private int incomeAmount;
     private String incomeDate;
     private String incomeContent;
-    private Long categoryId;
-    private String categoryName;
+    private Long categoryIncomeId;
+    private String categoryIncomeName;
 }
