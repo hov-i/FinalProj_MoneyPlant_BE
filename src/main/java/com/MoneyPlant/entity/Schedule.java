@@ -27,7 +27,7 @@ public class Schedule { // 약어로 sc를 사용합니다.
     @Column(name = "sc_name", nullable = false)
     private String scName; // 일정 이름
 
-    @Column(name = "sc_color", nullable = false)
+    @Column(name = "color", nullable = false)
     private int color; // 일정 색
 
     @Column(name = "sc_date", nullable = false)

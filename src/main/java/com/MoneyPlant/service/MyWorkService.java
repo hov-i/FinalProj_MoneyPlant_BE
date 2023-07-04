@@ -37,14 +37,10 @@ public class MyWorkService {
 
             MyWork myWork = new MyWork();
             myWork.setUser(user);
-            myWork.setMyWorkName(myWorkDto.getMyWorkName());
+            myWork.setMyWkName(myWorkDto.getMyWkName());
             myWork.setMyColor(myWorkDto.getMyColor());
-            myWork.setMyPayType(myWorkDto.getMyPayType());
-            myWork.setMyWorkMoney(myWorkDto.getMyWorkMoney());
-            myWork.setMyWorkTime(myWorkDto.getMyWorkTime());
-            myWork.setMyWorkTax(myWorkDto.getMyWorkTax());
-            myWork.setMyWorkPay(myWorkDto.getMyWorkPay());
-            myWork.setMyPayDay(myWorkDto.getMyPayDay());
+            myWork.setMyWkPay(myWorkDto.getMyWkPay());
+            myWork.setMyWkPayday(myWorkDto.getMyWkPayday());
 
             myWorkRepository.save(myWork);
             return true;
@@ -63,21 +59,17 @@ public class MyWorkService {
     // 마이페이지 전체 나의 근무 조회
     public List<MyWorkDto> getWorkForMyPage(UserDetailsImpl userDetails) {
         Long userId = userDetails.getId();
-        List<MyWork> myWorkList = myWorkRepository.findByUserId(userId);
+        List<MyWork> myWorkList = myWorkRepository.findByUserId(userId) ;
 
         List<MyWorkDto> myWorkDtoList = new ArrayList<>();
         for (MyWork myWork : myWorkList) {
             MyWorkDto myWorkDto = new MyWorkDto();
 
             // 조회 내용 : 근무 이름, 근무 색
-            myWorkDto.setMyWorkName(myWork.getMyWorkName());
+            myWorkDto.setMyWkName(myWork.getMyWkName());
             myWorkDto.setMyColor(myWork.getMyColor());
-            myWorkDto.setMyPayType(myWork.getMyPayType());
-            myWorkDto.setMyWorkMoney(myWork.getMyWorkMoney());
-            myWorkDto.setMyWorkTime(myWork.getMyWorkTime());
-            myWorkDto.setMyWorkTax(myWork.getMyWorkTax());
-            myWorkDto.setMyWorkPay(myWork.getMyWorkPay());
-            myWorkDto.setMyPayDay(myWork.getMyPayDay());
+            myWorkDto.setMyWkPay(myWork.getMyWkPay());
+            myWorkDto.setMyWkPayday(myWork.getMyWkPayday());
 
             myWorkDtoList.add(myWorkDto);
         }

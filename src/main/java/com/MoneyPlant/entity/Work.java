@@ -24,27 +24,21 @@ public class Work {
     @Column(name = "work_name", nullable = false)
     private String workName; // 근무 이름
 
-    @Column(name = "work_color", nullable = false)
-    private int color; // 근무 색
-
-    @Column(name = "pay_type", nullable = false)
-    private String payType; // 급여 타입 : 건별, 시간제
-
-    @Column(name = "work_money", nullable = false)
-    private int workMoney; // 시급, 일급, 주급, 월급
+    @Column(name = "color", nullable = false)
+    private int color; // 근무 color
 
     @Column(name = "work_date", nullable = false)
-    private String workDate; // 근무 날짜 (다중 선택 ??)
+    private String workDate; // 근무 날짜
 
-    @Column(name = "work_time")
-    private double workTime; // 근무 시간
+    @Column(name = "work_start")
+    private double workStart; // 근무 시작 시간
+
+    @Column(name = "work_end")
+    private double workEnd; // 근무 종료 시간
 
     @Column(name = "work_pay")
-    private double workPay; // 급여 (월급이나 일급일 때만, 직접 작성)
+    private double workPay; // 급여 ( money * tax * date)
 
-    @Column(name = "work_tax")
-    private double workTax; // 급여 세금
-
-    @Column(name = "pay_day", nullable = false)
-    private String payDay; // 급여 지급일
+    @Column(name = "work_payday", nullable = false)
+    private String workPayday; // 급여 지급일
 }

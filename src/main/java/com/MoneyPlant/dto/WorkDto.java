@@ -6,16 +6,16 @@ import lombok.Setter;
 @Getter
 @Setter
 public class WorkDto {
-
-//    private Long workId;
-    private Long userId; // join 으로 사용 예정
-    private String workName;
-    private int color;
-    private String payType;
-    private int workMoney;
-    private String workDate;
-    private double workTime;
-    private double workPay;
-    private double workTax;
-    private String payDay;
+    private Long userId;
+    private String workName; // 근무 이름
+    private int color; // 근무 등록 color
+    private int payType; // 시급, 건별, 일급, 월급
+    private double workMoney; // 시급 : 시급 금액, 건별 : 건별 금액 / 월급 : 연봉
+    private String workDate; // 근무 날짜
+    private double workStart; // 근무 시작 시간
+    private double workEnd; // 근무 종료 시간
+    private double workRest; // 근무 휴식 시간
+    private double workTax; // 급여 세금
+    private double workPay; // 계산 된 급여
+    private String workPayday; // 급여 지급일
 }

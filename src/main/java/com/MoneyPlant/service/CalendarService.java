@@ -66,14 +66,10 @@ public class CalendarService {
             Work work = new Work();
             work.setUser(user);
             work.setWorkName(workDto.getWorkName());
-            work.setColor(work.getColor());
-            work.setPayType(workDto.getPayType());
-            work.setWorkMoney(workDto.getWorkMoney());
+            work.setColor(workDto.getColor());
             work.setWorkDate(workDto.getWorkDate());
-            work.setWorkTime(workDto.getWorkTime());
             work.setWorkPay(workDto.getWorkPay());
-            work.setWorkTax(work.getWorkTax());
-            work.setPayDay(workDto.getPayDay());
+            work.setWorkPayday(workDto.getWorkPayday());
 
             workRepository.save(work);
 
@@ -123,16 +119,12 @@ public class CalendarService {
         for (Work work : workList) {
             WorkDto workDto = new WorkDto();
 
-            // 조회 내용 :  근무 날짜, 근무 이름, 근무 색
+            // 조회 내용 :  근무 날짜, 근무 이름, 근무 color, 급여, 급여일
             work.setWorkName(workDto.getWorkName());
-            work.setColor(work.getColor());
-            work.setPayType(workDto.getPayType());
-            work.setWorkMoney(workDto.getWorkMoney());
+            work.setColor(workDto.getColor());
             work.setWorkDate(workDto.getWorkDate());
-            work.setWorkTime(workDto.getWorkTime());
-            work.setWorkTax(work.getWorkTax());
             work.setWorkPay(workDto.getWorkPay());
-            work.setPayDay(workDto.getPayDay());
+            work.setWorkPayday(workDto.getWorkPayday());
 
             workDtoList.add(workDto);
         }
@@ -172,7 +164,9 @@ public class CalendarService {
             workDto.setWorkName(work.getWorkName());
             workDto.setColor(work.getColor());
             workDto.setWorkDate(work.getWorkDate());
-            workDto.setWorkTime(work.getWorkTime());
+            workDto.setWorkStart(work.getWorkStart());
+            workDto.setWorkEnd(work.getWorkEnd());
+            workDto.setWorkDate(work.getWorkDate());
             workDto.setWorkPay(work.getWorkPay());
 
             workDtoList.add(workDto);

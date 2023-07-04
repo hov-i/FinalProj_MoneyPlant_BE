@@ -13,35 +13,23 @@ import javax.persistence.*;
 @ToString
 public class MyWork {
     @Id
-    @Column(name = "my_work_id")
+    @Column(name = "my_wk_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long myWorkId; // 마이페이지 근무 Id
+    private Long myWkId; // 마이페이지 근무 Id
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
     private User user; // userId
 
-    @Column(name = "my_work_name", nullable = false)
-    private String myWorkName; // 근무 이름
+    @Column(name = "my_wk_name", nullable = false)
+    private String myWkName; // 근무 이름
 
-    @Column(name = "my_work_color", nullable = false)
-    private int myColor; // 근무 색
+    @Column(name = "my_color", nullable = false)
+    private int myColor; // 근무 color
 
-    @Column(name = "my_pay_type", nullable = false)
-    private String myPayType; // 급여 타입 : 건별, 시간제
+    @Column(name = "my_wk_pay")
+    private double myWkPay; // 급여 ( money * tax * date)
 
-    @Column(name = "my_work_money", nullable = false)
-    private int myWorkMoney; // 시급, 일급, 주급, 월급
-
-    @Column(name = "my_work_time")
-    private double myWorkTime; // 근무 시간
-
-    @Column(name = "my_work_pay")
-    private double myWorkPay; // 급여 (월급이나 일급일 때만, 직접 작성)
-
-    @Column(name = "my_work_tax")
-    private double myWorkTax; // 급여 세금
-
-    @Column(name = "my_pay_day", nullable = false)
-    private String myPayDay; // 급여 지급일
+    @Column(name = "my_wk_payday", nullable = false)
+    private String myWkPayday; // 급여 지급일
 }
