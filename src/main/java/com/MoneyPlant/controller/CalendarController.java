@@ -81,12 +81,10 @@ public class CalendarController {
     public ResponseEntity<CalendarDto> CalendarView (@AuthenticationPrincipal UserDetailsImpl userDetails) throws IllegalAccessException {
         List<ScheduleDto> scheduleDtoList = calendarService.getScheduleForCal(userDetails);
         List<WorkDto> workDtoList = calendarService.getWorkForCal(userDetails);
-//        List<ExpenseDto> dailyExpenseList = ledgerService.getDailyExpense(userDetails);
-//        List<IncomeDto> dailyincomeDtoList = ledgerService.getDailyIncome(userDetails);
+        Map<String, Integer> dailyExpenseList =  ledgerService.getDailyExpense(userDetails);
+        Map<String, Integer> dailyIncomeList =  ledgerService.getDailyIncome(userDetails);
 
-
-//        CalendarDto calendarDto = new CalendarDto(scheduleDtoList, workDtoList, dailyExpenseList, dailyincomeDtoList);
-        CalendarDto calendarDto = new CalendarDto(scheduleDtoList, workDtoList);
+        CalendarDto calendarDto = new CalendarDto(scheduleDtoList, workDtoList, dailyExpenseList, dailyIncomeList);
 
         return ResponseEntity.ok(calendarDto);
     }
