@@ -8,6 +8,7 @@ import com.MoneyPlant.dto.UserInfoResponse;
 import com.MoneyPlant.entity.RefreshToken;
 import com.MoneyPlant.entity.Role;
 import com.MoneyPlant.entity.User;
+import com.MoneyPlant.repository.OAuthTokenRepository;
 import com.MoneyPlant.repository.RoleRepository;
 import com.MoneyPlant.repository.UserRepository;
 import com.MoneyPlant.security.exception.TokenRefreshException;
@@ -46,8 +47,8 @@ public class AuthService {
     private final PasswordEncoder encoder;
     private final JwtUtils jwtUtils;
 
-    @Autowired
-    RefreshTokenService refreshTokenService;
+    private final RefreshTokenService refreshTokenService;
+    private final OAuthTokenService oAuthTokenService;
 
     // 회원가입
     public ResponseEntity<?> signup(SignupRequest signupRequest) {
@@ -124,6 +125,8 @@ public class AuthService {
         if (principle.toString().equals( "anonymousUser")) {
             Long userId = ((UserDetailsImpl) principle).getId();
             refreshTokenService.deleteByUserId(userId);
+            oAuthTokenService.deleteByUserId(userId);
+
         }
 
         // cookie의 token값들을 지워버림
