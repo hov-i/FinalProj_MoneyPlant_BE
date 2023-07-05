@@ -3,10 +3,12 @@ package com.MoneyPlant.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 @Data
 public class GoogleOAuthToken {
     private String access_token;
