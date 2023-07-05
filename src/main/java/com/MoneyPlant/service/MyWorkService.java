@@ -67,9 +67,11 @@ public class MyWorkService {
 
             // 조회 내용 : 근무 이름, 근무 색
             myWorkDto.setMyWkName(myWork.getMyWkName());
+            myWorkDto.setMyWkStart(myWork.getMyWorkStart());
+            myWorkDto.setMyWkEnd(myWork.getMyWorkEnd());
+            myWorkDto.setMyWkPayday(myWork.getMyWkPayday());
             myWorkDto.setMyColor(myWork.getMyColor());
             myWorkDto.setMyWkPay(myWork.getMyWkPay());
-            myWorkDto.setMyWkPayday(myWork.getMyWkPayday());
 
             myWorkDtoList.add(myWorkDto);
         }

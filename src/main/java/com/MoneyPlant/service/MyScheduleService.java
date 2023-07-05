@@ -38,8 +38,8 @@ public class MyScheduleService {
             MySchedule mySchedule = new MySchedule();
             mySchedule.setUser(user);
             mySchedule.setMyScName(myScheduleDto.getMyScName());
-            mySchedule.setMyColor(myScheduleDto.getMyColor());
             mySchedule.setMyScBudget(myScheduleDto.getMyScBudget());
+            mySchedule.setMyColor(myScheduleDto.getMyColor());
 
             myScheduleRepository.save(mySchedule);
             return true;
