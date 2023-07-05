@@ -246,22 +246,22 @@ public class LedgerService {
 
         List<Income> incomeList = incomeRepository.findByUserId(userId);
 
-        Map<String, Integer> dailyIncome = new LinkedHashMap<>();
+        Map<String, Integer> dailyIncomeList = new LinkedHashMap<>();
 
         for (Income income : incomeList) {
             String incomeDate = income.getIncomeDate();
             int incomeAmount = income.getIncomeAmount();
 
             // 이미 해당 날짜의 합계가 계산되었는지 확인
-            if (dailyIncome.containsKey(incomeDate)) {
-                int currentTotal = dailyIncome.get(incomeDate);
-                dailyIncome.put(incomeDate, currentTotal + incomeAmount);
+            if (dailyIncomeList.containsKey(incomeDate)) {
+                int currentTotal = dailyIncomeList.get(incomeDate);
+                dailyIncomeList.put(incomeDate, currentTotal + incomeAmount);
             } else {
-                dailyIncome.put(incomeDate, incomeAmount);
+                dailyIncomeList.put(incomeDate, incomeAmount);
             }
         }
 
-        return dailyIncome;
+        return dailyIncomeList;
     }
 
     //지출
@@ -270,22 +270,22 @@ public class LedgerService {
 
         List<Expense> expenseList = expenseRepository.findByUserId(userId);
 
-        Map<String, Integer> dailyExpense = new LinkedHashMap<>();
+        Map<String, Integer> dailyExpenseList = new LinkedHashMap<>();
 
         for (Expense expense : expenseList) {
             String expenseDate = expense.getExpenseDate();
             int expenseAmount = expense.getExpenseAmount();
 
             // 이미 해당 날짜의 합계가 계산되었는지 확인
-            if (dailyExpense.containsKey(expenseDate)) {
-                int currentTotal = dailyExpense.get(expenseDate);
-                dailyExpense.put(expenseDate, currentTotal + expenseAmount);
+            if (dailyExpenseList.containsKey(expenseDate)) {
+                int currentTotal = dailyExpenseList.get(expenseDate);
+                dailyExpenseList.put(expenseDate, currentTotal + expenseAmount);
             } else {
-                dailyExpense.put(expenseDate, expenseAmount);
+                dailyExpenseList.put(expenseDate, expenseAmount);
             }
         }
 
-        return dailyExpense;
+        return dailyExpenseList;
     }
 
 

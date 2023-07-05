@@ -12,6 +12,6 @@ import java.util.List;
 public class CalendarDto {
     private List<ScheduleDto> scheduleDtoList;
     private List<WorkDto> workDtoList;
-//    private List<IncomeDto> incomeDtoList;
-//    private List<ExpenseDto> expenseDtoList;
+    private List<ExpenseDto> dailyExpenseList;
+    private List<IncomeDto> dailyincomeDtoList;
 }
