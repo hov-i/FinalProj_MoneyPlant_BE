@@ -31,8 +31,10 @@ public class CalendarService {
     // 캘린더 일정 생성
     @Transactional
     public boolean createSchedule(ScheduleDto scheduleDto, UserDetailsImpl userDetails) {
+        Long userId = userDetails.getId();
+
         try {
-            Long userId = userDetails.getId();
+            // 구글이 연동 되어 있는 경우 구글부터 진행한다
             scheduleDto.setUserId(userId);
 
             User user = userRepository.findById(userId)
@@ -54,6 +56,13 @@ public class CalendarService {
             return false;
         }
     }
+
+    // 마이페이지 나의 일정 가져와서 등록하기
+
+    // 캘린더 일정 수정
+
+    // 캘린더 일정 삭제
+
 
     // 캘린더 근무 생성
     public boolean createWork(WorkDto workDto, UserDetailsImpl userDetails) {
@@ -81,13 +90,7 @@ public class CalendarService {
         }
     }
 
-    // 마이페이지에서 나의 일정 & 근무 가져와서 등록하기
-
-    // 캘린더 일정/근무 수정
-
-    // 캘린더 일정/근무 삭제
-
-    // 구글캘린더에서 받아온 일정 수정하기 (예산 등록)
+    // 마이페이지 나의 근무 가져와서 등록하기
 
 
 // ===========================================================================
@@ -119,7 +122,7 @@ public class CalendarService {
         for (Work work : workList) {
             WorkDto workDto = new WorkDto();
 
-            // 조회 내용 :  근무 날짜, 근무 이름, 근무 color, 급여, 급여일
+            // 조회 내용 :  근무 날짜, 근무 이름, 급여일, 근무 color, 급여
             work.setWorkName(workDto.getWorkName());
             work.setColor(workDto.getColor());
             work.setWorkDate(workDto.getWorkDate());
@@ -130,6 +133,11 @@ public class CalendarService {
         }
         return workDtoList;
     }
+
+    // 캘린더 전체 수입 합계 (daily Income) - 날짜, 이름, 수입 합계
+
+    // 캘린더 전체 지출 합계 (daily Expense) - 날짜, 이름, 지출 합계
+
 
     // 캘린더 전체 일정 조회 - 일별 상세
     public List<ScheduleDto> getScheduleForDetail(UserDetailsImpl userDetails) {
@@ -160,7 +168,7 @@ public class CalendarService {
         for (Work work : workList) {
             WorkDto workDto = new WorkDto();
 
-            // 조회 내용 :  근무 날짜, 근무 이름, 근무 색
+            // 조회 내용 :  근무 날짜, 근무 이름, 근무 시간(시작, 종료), 급여일, 근무 color, 급여
             workDto.setWorkName(work.getWorkName());
             workDto.setColor(work.getColor());
             workDto.setWorkDate(work.getWorkDate());
@@ -173,4 +181,8 @@ public class CalendarService {
         }
         return workDtoList;
     }
+
+    // 캘린더 전체 수입 detail (daily Income) - 날짜, 개별 수입 내역
+
+    // 캘린더 전체 지출 detail (daily Expense) - 날짜, 개별 지출 내역
 }
