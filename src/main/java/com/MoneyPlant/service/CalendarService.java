@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import javax.transaction.Transactional;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,6 +29,10 @@ public class CalendarService {
     private final ScheduleRepository scheduleRepository;
     private final WorkRepository workRepository;
     private final UserRepository userRepository;
+    private final IncomeRepository incomeRepository;
+    private final ExpenseRepository expenseRepository;
+    private final CategoryRepository categoryRepository;
+    private final CategoryIncomeRepository categoryIncomeRepository;
 
     // 캘린더 일정 생성
     @Transactional
@@ -134,9 +140,53 @@ public class CalendarService {
         return workDtoList;
     }
 
-    // 캘린더 전체 수입 합계 (daily Income) - 날짜, 이름, 수입 합계
+    // 캘린더 전체 수입 합계 (daily Income) - 날짜, 수입 합계
+    public Map<String, Integer> getDailyIncome(UserDetailsImpl userDetails) {
+        Long userId = userDetails.getId();
 
-    // 캘린더 전체 지출 합계 (daily Expense) - 날짜, 이름, 지출 합계
+        List<Income> incomeList = incomeRepository.findByUserId(userId);
+
+        Map<String, Integer> dailyIncomeList = new LinkedHashMap<>();
+
+        for (Income income : incomeList) {
+            String incomeDate = income.getIncomeDate();
+            int incomeAmount = income.getIncomeAmount();
+
+            // 이미 해당 날짜의 합계가 계산되었는지 확인
+            if (dailyIncomeList.containsKey(incomeDate)) {
+                int currentTotal = dailyIncomeList.get(incomeDate);
+                dailyIncomeList.put(incomeDate, currentTotal + incomeAmount);
+            } else {
+                dailyIncomeList.put(incomeDate, incomeAmount);
+            }
+        }
+
+        return dailyIncomeList;
+    }
+
+    // 캘린더 전체 지출 합계 (daily Expense) - 날짜, 지출 합계
+    public Map<String, Integer> getDailyExpense(UserDetailsImpl userDetails) {
+        Long userId = userDetails.getId();
+
+        List<Expense> expenseList = expenseRepository.findByUserId(userId);
+
+        Map<String, Integer> dailyExpenseList = new LinkedHashMap<>();
+
+        for (Expense expense : expenseList) {
+            String expenseDate = expense.getExpenseDate();
+            int expenseAmount = expense.getExpenseAmount();
+
+            // 이미 해당 날짜의 합계가 계산되었는지 확인
+            if (dailyExpenseList.containsKey(expenseDate)) {
+                int currentTotal = dailyExpenseList.get(expenseDate);
+                dailyExpenseList.put(expenseDate, currentTotal + expenseAmount);
+            } else {
+                dailyExpenseList.put(expenseDate, expenseAmount);
+            }
+        }
+
+        return dailyExpenseList;
+    }
 
 
     // 캘린더 전체 일정 조회 - 일별 상세
@@ -183,6 +233,52 @@ public class CalendarService {
     }
 
     // 캘린더 전체 수입 detail (daily Income) - 날짜, 개별 수입 내역
+    public List<IncomeDto> getIncomeWithCategory(UserDetailsImpl userDetails) {
+        Long userId = userDetails.getId();
+        log.info("시용자 아이디 : " + userId);
+        List<Income> incomeList = incomeRepository.findByUserId(userId);
+
+        List<IncomeDto> incomeDtoList = new ArrayList<>();
+        for (Income income : incomeList) {
+            IncomeDto incomeDto = new IncomeDto();
+            incomeDto.setIncomeId(income.getIncomeId());
+            incomeDto.setIncomeAmount(income.getIncomeAmount());
+            incomeDto.setIncomeDate(income.getIncomeDate());
+            incomeDto.setIncomeContent(income.getIncomeContent());
+            incomeDto.setCategoryIncomeId(income.getCategoryIncome().getCategoryIncomeId());
+            incomeDto.setUserId(income.getUser().getId());
+
+            String categoryIncomeName = categoryIncomeRepository.findByCategoryIncomeId(income.getCategoryIncome().getCategoryIncomeId()).getCategoryIncomeName();
+            incomeDto.setCategoryIncomeName(categoryIncomeName);
+
+            incomeDtoList.add(incomeDto);
+        }
+
+        return incomeDtoList;
+    }
 
     // 캘린더 전체 지출 detail (daily Expense) - 날짜, 개별 지출 내역
+    public List<ExpenseDto> getExpenseWithCategory(UserDetailsImpl userDetails) {
+        Long userId = userDetails.getId();
+        log.info("지출 사용자 아이디 : " + userId);
+        List<Expense> expenseList = expenseRepository.findByUserId(userId);
+
+        List<ExpenseDto> expenseDtoList = new ArrayList<>();
+        for (Expense expense : expenseList) {
+            ExpenseDto expenseDto = new ExpenseDto();
+            expenseDto.setExpenseId(expense.getExpenseId());
+            expenseDto.setExpenseAmount(expense.getExpenseAmount());
+            expenseDto.setExpenseDate(expense.getExpenseDate());
+            expenseDto.setExpenseContent(expense.getExpenseContent());
+            expenseDto.setCategoryId(expense.getCategory().getCategoryId());
+            expenseDto.setUserId(expense.getUser().getId());
+
+            String categoryName = categoryRepository.findByCategoryId(expense.getCategory().getCategoryId()).getCategoryName();
+            expenseDto.setCategoryName(categoryName);
+
+            expenseDtoList.add(expenseDto);
+        }
+
+        return expenseDtoList;
+    }
 }
