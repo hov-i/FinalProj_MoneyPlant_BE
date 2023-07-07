@@ -13,6 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,6 +23,7 @@ import java.util.List;
 public class CalendarController {
     @Autowired
     private final CalendarService calendarService;
+    private final LedgerService ledgerService;
 
 
     // 캘린더 일정 추가, 삭제, 수정 ( 구글 연동 되어있으면 즉시 구글 캘린더에도 적용시켜주기 (금액쓰는 것도 있음) )
@@ -79,8 +81,10 @@ public class CalendarController {
     public ResponseEntity<CalendarDto> CalendarView (@AuthenticationPrincipal UserDetailsImpl userDetails) throws IllegalAccessException {
         List<ScheduleDto> scheduleDtoList = calendarService.getScheduleForCal(userDetails);
         List<WorkDto> workDtoList = calendarService.getWorkForCal(userDetails);
+        Map<String, Integer> dailyExpenseList =  ledgerService.getDailyExpense(userDetails);
+        Map<String, Integer> dailyIncomeList =  ledgerService.getDailyIncome(userDetails);
 
-        CalendarDto calendarDto = new CalendarDto(scheduleDtoList, workDtoList);
+        CalendarDto calendarDto = new CalendarDto(scheduleDtoList, workDtoList, dailyExpenseList, dailyIncomeList);
 
         return ResponseEntity.ok(calendarDto);
     }
