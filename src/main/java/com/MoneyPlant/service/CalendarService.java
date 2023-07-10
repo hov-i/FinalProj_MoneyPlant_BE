@@ -431,7 +431,7 @@ public class CalendarService {
         return dailyExpenseList;
     }
 
-//----------------------------------------------------------------------------
+
     // 캘린더 전체 일정 조회 - 일별 상세
     public List<ScheduleDto> getScheduleForDetail(UserDetailsImpl userDetails) {
         Long userId = userDetails.getId();
