@@ -42,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/auth/google", "/auth/google/redirect", "/api/auth/signup", "/api/auth/signin", "/api/auth/refreshtoken").permitAll()
+                .antMatchers("/mail/sendmail", "/auth/google", "/auth/google/redirect", "/api/auth/signup", "/api/auth/signin", "/api/auth/refreshtoken").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
