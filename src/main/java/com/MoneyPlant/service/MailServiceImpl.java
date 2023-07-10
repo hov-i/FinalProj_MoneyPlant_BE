@@ -1,8 +1,16 @@
 package com.MoneyPlant.service;
 
+import com.MoneyPlant.dto.IncomeDto;
+import com.MoneyPlant.entity.CategoryIncome;
+import com.MoneyPlant.entity.Income;
+import com.MoneyPlant.entity.User;
+import com.MoneyPlant.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
@@ -13,7 +21,12 @@ import java.util.Random;
 
 
 @Service
+@RequiredArgsConstructor
+@Transactional
 public class MailServiceImpl implements MailService {
+
+    private final UserRepository userRepository;
+
     @Autowired
     private JavaMailSender mailSender;
 
@@ -54,7 +67,7 @@ public class MailServiceImpl implements MailService {
             case "findPw":
                 code = makeCode(10);
                 html = makeHtml(type, code);
-                subject = "MoneyPlan:T에서 변경된 비밀번호를 보냅니다.";
+                subject = "MoneyPlan:T에서 변경된 비밀번호를 전송했습니다.";
                 break;
         }
 
@@ -73,4 +86,20 @@ public class MailServiceImpl implements MailService {
         return code;
     }
 
+    // 이메일이랑 생성 코드를 일치시킨 후 PW를 주입
+    public boolean updatePwd(String email, String code) {
+        try {
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
+            // 비밀번호 수정
+            user.setPassword(code);
+
+            userRepository.save(user); // 수정된 사용자 정보 저장
+            return true;
+        } catch (Exception e) {
+            System.err.println("비밀번호 변경 실패: " + e.getMessage());
+            return false;
+        }
+    }
 }

@@ -1,6 +1,5 @@
 package com.MoneyPlant.service;
 
-import com.MoneyPlant.dto.CategoryDto;
 import com.MoneyPlant.dto.CategoryIncomeDto;
 import com.MoneyPlant.dto.ExpenseDto;
 import com.MoneyPlant.dto.IncomeDto;
